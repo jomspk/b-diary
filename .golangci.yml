@@ -1,0 +1,36 @@
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - errcheck
+    - goimports
+    - govet
+    - nilerr
+    - staticcheck
+    - wrapcheck
+    - zerologlint
+issues:
+  exclude-dirs:
+    - webapp
+    - node_modules
+    - devbox
+  exclude-files:
+    - "backend/db_model/*.xo.go"
+    - "backned/graph/model/models_gen.go"
+    - "backend/graph/generated.go"
+  exclude-rules:
+    - path: "backend/logger.go"
+      linters:
+        - zerologlint
+    - path: "backend/env/env.go"
+      linters:
+        - wrapcheck
+    - path: "backend/graph/schema.resolvers.go"
+      linters:
+        - wrapcheck
+    - path: "backend/graph/model.resolvers.go"
+      linters:
+        - wrapcheck
+    - path: "backend/db_model/templates/go/go.go"
+      linters:
+        - wrapcheck

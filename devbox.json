@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+  "packages": {
+    "go": "1.22.5",
+    "nodejs": "20",
+    "mycli": "latest",
+    "mysql84": {
+      "version": "latest",
+      "disable_plugin": true
+    },
+    "pueue": "3.4.1",
+    "cowsay": "latest",
+    "lolcat": "latest",
+    "air": "1.52.0",
+    "process-compose": "1.9.0"
+  },
+  "shell": {
+    "init_hook": [
+      "unset GOROOT GOPATH GOMODCACHE GOBIN GOTOOLDIR",
+      "./devbox/init.sh",
+      "./devbox/welcome.sh"
+    ],
+    "scripts": {
+      "test": [
+        "echo \"Error: no test specified\" && exit 1"
+      ]
+    }
+  },
+  "env": {
+    "GOENV": "off",
+    "PATH": "$PWD/bin:$PATH",
+    "MYSQL_HOME": "$PWD/devbox/mysql",
+    "MYSQL_DATA_DIR": "$PWD/devbox/mysql/data",
+    "MYSQL_UNIX_PORT": "/tmp/lxcard_mysql.sock",
+    "MYSQL_PORT": "3307",
+    "DEVBOX_COREPACK_ENABLED": "true",
+    "SKIP_INIT": "false"
+  }
+}

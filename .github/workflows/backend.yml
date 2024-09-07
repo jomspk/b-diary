@@ -1,0 +1,83 @@
+name: backend
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: reviewdog/action-golangci-lint@v2
+        name: golangci-lint
+        with:
+          go_version_file: 'go.mod'
+          golangci_lint_version: 'v1.59.1'
+
+  generate:
+    name: Generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start MySQL
+        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=lxcard -p 3307:3306 -d mysql:8.4 &
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Install go tools
+        run: make go-install-tools
+      - name: Run migration
+        run: make migrate-up
+      - name: Run make gen
+        run: make gen
+      - name: Run make backend/format
+        run: make backend/format
+      - name: Check for changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Changes detected after running 'make gen'. Please run 'make gen' locally and commit the changes."
+            git diff
+            exit 1
+          fi
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start MySQL
+        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=test_lxcard -p 3307:3306 -d mysql:8.4 &
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Run tests
+        run: make backend/test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Build
+        run: go build -v ./...
+
+  graphql-schema:
+    name: GraphQL Schema Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install graphql-inspector
+        run: npm install -g @graphql-inspector/cli
+      - name: Check for breaking changes
+        run: |
+          graphql-inspector diff schema.graphql schema.graphql --rule suppressRemovalOfDeprecatedField
+        continue-on-error: true
