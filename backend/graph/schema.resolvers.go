@@ -61,11 +61,6 @@ func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDi
 	panic(fmt.Errorf("not implemented: CreateDiary - createDiary"))
 }
 
-// SaveDataToBlockchain is the resolver for the saveDataToBlockchain field.
-func (r *mutationResolver) SaveDataToBlockchain(ctx context.Context, targetMintDate time.Time) ([]string, error) {
-	panic(fmt.Errorf("not implemented: SaveDataToBlockchain - saveDataToBlockchain"))
-}
-
 // Card is the resolver for the card field.
 func (r *queryResolver) Card(ctx context.Context, id string) (*model.Card, error) {
 	card, err := r.CardSvc.Get(ctx, defaultTenantID, id)

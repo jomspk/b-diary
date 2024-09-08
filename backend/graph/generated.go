@@ -76,13 +76,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateCard           func(childComplexity int, input model.CreateCardInput) int
-		CreateDiary          func(childComplexity int, input model.CreateDiaryInput) int
-		CreateUser           func(childComplexity int, input model.CreateUserInput) int
-		LockCard             func(childComplexity int, id string) int
-		SaveDataToBlockchain func(childComplexity int, targetMintDate time.Time) int
-		UnlockCard           func(childComplexity int, id string) int
-		UpdateCard           func(childComplexity int, id string, input model.UpdateCardInput) int
+		CreateCard  func(childComplexity int, input model.CreateCardInput) int
+		CreateDiary func(childComplexity int, input model.CreateDiaryInput) int
+		CreateUser  func(childComplexity int, input model.CreateUserInput) int
+		LockCard    func(childComplexity int, id string) int
+		UnlockCard  func(childComplexity int, id string) int
+		UpdateCard  func(childComplexity int, id string, input model.UpdateCardInput) int
 	}
 
 	Query struct {
@@ -109,7 +108,6 @@ type MutationResolver interface {
 	LockCard(ctx context.Context, id string) (bool, error)
 	UnlockCard(ctx context.Context, id string) (bool, error)
 	CreateDiary(ctx context.Context, input model.CreateDiaryInput) (*model.Diary, error)
-	SaveDataToBlockchain(ctx context.Context, targetMintDate time.Time) ([]string, error)
 }
 type QueryResolver interface {
 	Card(ctx context.Context, id string) (*model.Card, error)
@@ -317,18 +315,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.LockCard(childComplexity, args["id"].(string)), true
-
-	case "Mutation.saveDataToBlockchain":
-		if e.complexity.Mutation.SaveDataToBlockchain == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_saveDataToBlockchain_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.SaveDataToBlockchain(childComplexity, args["targetMintDate"].(time.Time)), true
 
 	case "Mutation.unlockCard":
 		if e.complexity.Mutation.UnlockCard == nil {
@@ -592,21 +578,6 @@ func (ec *executionContext) field_Mutation_lockCard_args(ctx context.Context, ra
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_saveDataToBlockchain_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 time.Time
-	if tmp, ok := rawArgs["targetMintDate"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("targetMintDate"))
-		arg0, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["targetMintDate"] = arg0
 	return args, nil
 }
 
@@ -1957,61 +1928,6 @@ func (ec *executionContext) fieldContext_Mutation_createDiary(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createDiary_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_saveDataToBlockchain(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_saveDataToBlockchain(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SaveDataToBlockchain(rctx, fc.Args["targetMintDate"].(time.Time))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]string)
-	fc.Result = res
-	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_saveDataToBlockchain(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_saveDataToBlockchain_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4794,13 +4710,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "saveDataToBlockchain":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_saveDataToBlockchain(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5501,38 +5410,6 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) unmarshalNID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNID2string(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNID2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNID2string(ctx, sel, v[i])
-	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
