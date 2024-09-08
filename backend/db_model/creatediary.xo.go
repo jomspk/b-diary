@@ -10,8 +10,9 @@ import (
 type CreateDiary struct {
 	ID              string         `json:"id"`                // id
 	EncryptionKeyID sql.NullString `json:"encryption_key_id"` // encryption_key_id
-	Algo            sql.NullString `json:"algo"`              // algo
 	UserID          string         `json:"user_id"`           // user_id
-	DiaryID         string         `json:"diary_id"`          // diary_id
 	SaveToBcAt      sql.NullTime   `json:"save_to_bc_at"`     // save_to_bc_at
+	TokenID         sql.NullInt64  `json:"token_id"`          // token_id
+	Content         string         `json:"content"`           // content
+	Title           string         `json:"title"`             // title
 }
