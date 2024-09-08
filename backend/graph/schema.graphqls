@@ -1,122 +1,149 @@
 input CreateUserInput {
-    """
-    ユーザ名
-    """
-    name: String!
+  """
+  ユーザ名
+  """
+  name: String!
 }
 
 input CreateCardInput {
-    """
-    カード名
-    """
-    name: String!
-    """
-    カード所有者
-    """
-    ownerId: ID!
-    """
-    カード閲覧者IDの配列
-    """
-    viewerIds: [ID!]
-    """
-    カード説明
-    """
-    description: String!
-    """
-    1回あたりの利用上限金額
-    """
-    onceMaxAmount: Uint32
-    """
-    月ごとの利用上限金額
-    """
-    monthlyMaxAmount: Uint32
-    """
-    累計の利用上限金額
-    """
-    totalMaxAmount: Uint
-    """
-    カード利用開始日
-    """
-    startDate: Date
-    """
-    カード利用終了日
-    """
-    endDate: Date
+  """
+  カード名
+  """
+  name: String!
+  """
+  カード所有者
+  """
+  ownerId: ID!
+  """
+  カード閲覧者IDの配列
+  """
+  viewerIds: [ID!]
+  """
+  カード説明
+  """
+  description: String!
+  """
+  1回あたりの利用上限金額
+  """
+  onceMaxAmount: Uint32
+  """
+  月ごとの利用上限金額
+  """
+  monthlyMaxAmount: Uint32
+  """
+  累計の利用上限金額
+  """
+  totalMaxAmount: Uint
+  """
+  カード利用開始日
+  """
+  startDate: Date
+  """
+  カード利用終了日
+  """
+  endDate: Date
 }
 
 input UpdateCardInput {
-    """
-    カード名
-    """
-    name: String!
-    """
-    カード所有者
-    """
-    ownerId: ID!
-    """
-    カード閲覧者IDの配列
-    """
-    viewerIds: [ID!]
-    """
-    カード説明
-    """
-    description: String!
-    """
-    1回あたりの利用上限金額
-    """
-    onceMaxAmount: Uint32
-    """
-    月ごとの利用上限金額
-    """
-    monthlyMaxAmount: Uint32
-    """
-    累計の利用上限金額
-    """
-    totalMaxAmount: Uint
-    """
-    カード利用開始日
-    """
-    startDate: Date
-    """
-    カード利用終了日
-    """
-    endDate: Date
+  """
+  カード名
+  """
+  name: String!
+  """
+  カード所有者
+  """
+  ownerId: ID!
+  """
+  カード閲覧者IDの配列
+  """
+  viewerIds: [ID!]
+  """
+  カード説明
+  """
+  description: String!
+  """
+  1回あたりの利用上限金額
+  """
+  onceMaxAmount: Uint32
+  """
+  月ごとの利用上限金額
+  """
+  monthlyMaxAmount: Uint32
+  """
+  累計の利用上限金額
+  """
+  totalMaxAmount: Uint
+  """
+  カード利用開始日
+  """
+  startDate: Date
+  """
+  カード利用終了日
+  """
+  endDate: Date
+}
+
+input CreateDiaryInput {
+  """
+  日記内容
+  """
+  content: String!
+  """
+  日記のタイトル
+  """
+  title: String!
+  """
+  日記作成者のFirebase UID
+  """
+  firebaseUid: String!
+  """
+  日記作成者のウォレットアドレス
+  """
+  walletAddress: String
 }
 
 type Query {
-    """
-    カード取得
-    """
-    card(id: ID!): Card!
-    """
-    カード一覧取得
-    """
-    cards: [Card!]!
-    """
-    ユーザ一覧取得
-    """
-    users: [User!]!
+  """
+  カード取得
+  """
+  card(id: ID!): Card!
+  """
+  カード一覧取得
+  """
+  cards: [Card!]!
+  """
+  ユーザ一覧取得
+  """
+  users: [User!]!
+  """
+  日記取得
+  """
+  diaries(month: Time!): [Diary!]!
 }
 
 type Mutation {
-    """
-    ユーザ作成
-    """
-    createUser(input: CreateUserInput!): User!
-    """
-    カード作成
-    """
-    createCard(input: CreateCardInput!): Card!
-    """
-    カード更新
-    """
-    updateCard(id: ID!, input: UpdateCardInput!): Card!
-    """
-    カードロック
-    """
-    lockCard(id: ID!): Boolean!
-    """
-    カードロック解除
-    """
-    unlockCard(id: ID!): Boolean!
+  """
+  ユーザ作成
+  """
+  createUser(input: CreateUserInput!): User!
+  """
+  カード作成
+  """
+  createCard(input: CreateCardInput!): Card!
+  """
+  カード更新
+  """
+  updateCard(id: ID!, input: UpdateCardInput!): Card!
+  """
+  カードロック
+  """
+  lockCard(id: ID!): Boolean!
+  """
+  カードロック解除
+  """
+  unlockCard(id: ID!): Boolean!
+  """
+  日記作成
+  """
+  createDiary(input: CreateDiaryInput!): Diary!
 }
