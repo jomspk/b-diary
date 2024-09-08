@@ -7,10 +7,11 @@ package graph
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"lxcard/backend/db_model"
 	"lxcard/backend/graph/model"
 	"lxcard/backend/pkg/slices"
-	"time"
 )
 
 // CreateUser is the resolver for the createUser field.
