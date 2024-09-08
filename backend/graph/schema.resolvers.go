@@ -6,10 +6,11 @@ package graph
 
 import (
 	"context"
-
+	"fmt"
 	"lxcard/backend/db_model"
 	"lxcard/backend/graph/model"
 	"lxcard/backend/pkg/slices"
+	"time"
 )
 
 // CreateUser is the resolver for the createUser field.
@@ -55,6 +56,16 @@ func (r *mutationResolver) UnlockCard(ctx context.Context, id string) (bool, err
 	return true, nil
 }
 
+// CreateDiary is the resolver for the createDiary field.
+func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDiaryInput) (*model.Diary, error) {
+	panic(fmt.Errorf("not implemented: CreateDiary - createDiary"))
+}
+
+// SaveDataToBlockchain is the resolver for the saveDataToBlockchain field.
+func (r *mutationResolver) SaveDataToBlockchain(ctx context.Context, targetMintDate time.Time) ([]string, error) {
+	panic(fmt.Errorf("not implemented: SaveDataToBlockchain - saveDataToBlockchain"))
+}
+
 // Card is the resolver for the card field.
 func (r *queryResolver) Card(ctx context.Context, id string) (*model.Card, error) {
 	card, err := r.CardSvc.Get(ctx, defaultTenantID, id)
@@ -90,6 +101,11 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	return slices.Map(users, func(user *db_model.User) *model.User {
 		return model.FormatUserResponse(user)
 	}), nil
+}
+
+// Diaries is the resolver for the diaries field.
+func (r *queryResolver) Diaries(ctx context.Context, month time.Time) ([]*model.Diary, error) {
+	panic(fmt.Errorf("not implemented: Diaries - diaries"))
 }
 
 // Mutation returns MutationResolver implementation.

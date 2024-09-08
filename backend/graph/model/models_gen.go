@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"time"
 )
 
 type CreateCardInput struct {
@@ -29,9 +30,27 @@ type CreateCardInput struct {
 	EndDate *string `json:"endDate,omitempty"`
 }
 
+type CreateDiaryInput struct {
+	// 日記内容
+	Content string `json:"content"`
+	// 日記のタイトル
+	Title string `json:"title"`
+	// 日記作成者のFirebase UID
+	FirebaseUID string `json:"firebaseUid"`
+	// 日記作成者のウォレットアドレス
+	WalletAddress *string `json:"walletAddress,omitempty"`
+}
+
 type CreateUserInput struct {
 	// ユーザ名
 	Name string `json:"name"`
+}
+
+type Diary struct {
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type Mutation struct {

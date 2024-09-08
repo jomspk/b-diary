@@ -8,13 +8,12 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"lxcard/backend/graph/model"
+	"lxcard/backend/graph/types"
 	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"lxcard/backend/graph/model"
-	"lxcard/backend/graph/types"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -69,18 +68,28 @@ type ComplexityRoot struct {
 		Viewers          func(childComplexity int) int
 	}
 
+	Diary struct {
+		Content   func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Title     func(childComplexity int) int
+	}
+
 	Mutation struct {
-		CreateCard func(childComplexity int, input model.CreateCardInput) int
-		CreateUser func(childComplexity int, input model.CreateUserInput) int
-		LockCard   func(childComplexity int, id string) int
-		UnlockCard func(childComplexity int, id string) int
-		UpdateCard func(childComplexity int, id string, input model.UpdateCardInput) int
+		CreateCard           func(childComplexity int, input model.CreateCardInput) int
+		CreateDiary          func(childComplexity int, input model.CreateDiaryInput) int
+		CreateUser           func(childComplexity int, input model.CreateUserInput) int
+		LockCard             func(childComplexity int, id string) int
+		SaveDataToBlockchain func(childComplexity int, targetMintDate time.Time) int
+		UnlockCard           func(childComplexity int, id string) int
+		UpdateCard           func(childComplexity int, id string, input model.UpdateCardInput) int
 	}
 
 	Query struct {
-		Card  func(childComplexity int, id string) int
-		Cards func(childComplexity int) int
-		Users func(childComplexity int) int
+		Card    func(childComplexity int, id string) int
+		Cards   func(childComplexity int) int
+		Diaries func(childComplexity int, month time.Time) int
+		Users   func(childComplexity int) int
 	}
 
 	User struct {
@@ -99,11 +108,14 @@ type MutationResolver interface {
 	UpdateCard(ctx context.Context, id string, input model.UpdateCardInput) (*model.Card, error)
 	LockCard(ctx context.Context, id string) (bool, error)
 	UnlockCard(ctx context.Context, id string) (bool, error)
+	CreateDiary(ctx context.Context, input model.CreateDiaryInput) (*model.Diary, error)
+	SaveDataToBlockchain(ctx context.Context, targetMintDate time.Time) ([]string, error)
 }
 type QueryResolver interface {
 	Card(ctx context.Context, id string) (*model.Card, error)
 	Cards(ctx context.Context) ([]*model.Card, error)
 	Users(ctx context.Context) ([]*model.User, error)
+	Diaries(ctx context.Context, month time.Time) ([]*model.Diary, error)
 }
 
 type executableSchema struct {
@@ -230,6 +242,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Card.Viewers(childComplexity), true
 
+	case "Diary.content":
+		if e.complexity.Diary.Content == nil {
+			break
+		}
+
+		return e.complexity.Diary.Content(childComplexity), true
+
+	case "Diary.createdAt":
+		if e.complexity.Diary.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Diary.CreatedAt(childComplexity), true
+
+	case "Diary.id":
+		if e.complexity.Diary.ID == nil {
+			break
+		}
+
+		return e.complexity.Diary.ID(childComplexity), true
+
+	case "Diary.title":
+		if e.complexity.Diary.Title == nil {
+			break
+		}
+
+		return e.complexity.Diary.Title(childComplexity), true
+
 	case "Mutation.createCard":
 		if e.complexity.Mutation.CreateCard == nil {
 			break
@@ -241,6 +281,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateCard(childComplexity, args["input"].(model.CreateCardInput)), true
+
+	case "Mutation.createDiary":
+		if e.complexity.Mutation.CreateDiary == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createDiary_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateDiary(childComplexity, args["input"].(model.CreateDiaryInput)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -265,6 +317,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.LockCard(childComplexity, args["id"].(string)), true
+
+	case "Mutation.saveDataToBlockchain":
+		if e.complexity.Mutation.SaveDataToBlockchain == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_saveDataToBlockchain_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SaveDataToBlockchain(childComplexity, args["targetMintDate"].(time.Time)), true
 
 	case "Mutation.unlockCard":
 		if e.complexity.Mutation.UnlockCard == nil {
@@ -309,6 +373,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Cards(childComplexity), true
 
+	case "Query.diaries":
+		if e.complexity.Query.Diaries == nil {
+			break
+		}
+
+		args, err := ec.field_Query_diaries_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Diaries(childComplexity, args["month"].(time.Time)), true
+
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
 			break
@@ -339,6 +415,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCreateCardInput,
+		ec.unmarshalInputCreateDiaryInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputUpdateCardInput,
 	)
@@ -473,6 +550,21 @@ func (ec *executionContext) field_Mutation_createCard_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createDiary_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateDiaryInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateDiaryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -500,6 +592,21 @@ func (ec *executionContext) field_Mutation_lockCard_args(ctx context.Context, ra
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_saveDataToBlockchain_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 time.Time
+	if tmp, ok := rawArgs["targetMintDate"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("targetMintDate"))
+		arg0, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["targetMintDate"] = arg0
 	return args, nil
 }
 
@@ -569,6 +676,21 @@ func (ec *executionContext) field_Query_card_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_diaries_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 time.Time
+	if tmp, ok := rawArgs["month"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("month"))
+		arg0, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["month"] = arg0
 	return args, nil
 }
 
@@ -1255,6 +1377,182 @@ func (ec *executionContext) fieldContext_Card_modifiedAt(_ context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _Diary_id(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Diary_title(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_title(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Diary_content(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_content(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Content, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_content(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Diary_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createUser(ctx, field)
 	if err != nil {
@@ -1600,6 +1898,126 @@ func (ec *executionContext) fieldContext_Mutation_unlockCard(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createDiary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createDiary(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateDiary(rctx, fc.Args["input"].(model.CreateDiaryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Diary)
+	fc.Result = res
+	return ec.marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createDiary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Diary_id(ctx, field)
+			case "title":
+				return ec.fieldContext_Diary_title(ctx, field)
+			case "content":
+				return ec.fieldContext_Diary_content(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Diary_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Diary", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createDiary_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_saveDataToBlockchain(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_saveDataToBlockchain(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SaveDataToBlockchain(rctx, fc.Args["targetMintDate"].(time.Time))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNID2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_saveDataToBlockchain(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_saveDataToBlockchain_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_card(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_card(ctx, field)
 	if err != nil {
@@ -1809,6 +2227,71 @@ func (ec *executionContext) fieldContext_Query_users(_ context.Context, field gr
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_diaries(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_diaries(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Diaries(rctx, fc.Args["month"].(time.Time))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Diary)
+	fc.Result = res
+	return ec.marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_diaries(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Diary_id(ctx, field)
+			case "title":
+				return ec.fieldContext_Diary_title(ctx, field)
+			case "content":
+				return ec.fieldContext_Diary_content(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Diary_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Diary", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_diaries_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -3886,6 +4369,54 @@ func (ec *executionContext) unmarshalInputCreateCardInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateDiaryInput(ctx context.Context, obj interface{}) (model.CreateDiaryInput, error) {
+	var it model.CreateDiaryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"content", "title", "firebaseUid", "walletAddress"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "content":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Content = data
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "firebaseUid":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firebaseUid"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.FirebaseUID = data
+		case "walletAddress":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("walletAddress"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.WalletAddress = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (model.CreateUserInput, error) {
 	var it model.CreateUserInput
 	asMap := map[string]interface{}{}
@@ -4148,6 +4679,60 @@ func (ec *executionContext) _Card(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
+var diaryImplementors = []string{"Diary"}
+
+func (ec *executionContext) _Diary(ctx context.Context, sel ast.SelectionSet, obj *model.Diary) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, diaryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Diary")
+		case "id":
+			out.Values[i] = ec._Diary_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "title":
+			out.Values[i] = ec._Diary_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "content":
+			out.Values[i] = ec._Diary_content(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._Diary_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -4198,6 +4783,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "unlockCard":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_unlockCard(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createDiary":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createDiary(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "saveDataToBlockchain":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_saveDataToBlockchain(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -4298,6 +4897,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_users(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "diaries":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_diaries(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -4799,9 +5420,72 @@ func (ec *executionContext) unmarshalNCreateCardInput2lxcardᚋbackendᚋgraph�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateDiaryInput(ctx context.Context, v interface{}) (model.CreateDiaryInput, error) {
+	res, err := ec.unmarshalInputCreateDiaryInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateUserInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDiary2lxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx context.Context, sel ast.SelectionSet, v model.Diary) graphql.Marshaler {
+	return ec._Diary(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Diary) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx context.Context, sel ast.SelectionSet, v *model.Diary) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Diary(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
@@ -4817,6 +5501,38 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNID2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNID2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNID2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
