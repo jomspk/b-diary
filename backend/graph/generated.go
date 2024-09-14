@@ -108,7 +108,7 @@ type MutationResolver interface {
 	UpdateCard(ctx context.Context, id string, input model.UpdateCardInput) (*model.Card, error)
 	LockCard(ctx context.Context, id string) (bool, error)
 	UnlockCard(ctx context.Context, id string) (bool, error)
-	CreateDiary(ctx context.Context, input model.CreateDiaryInput) (*model.Diary, error)
+	CreateDiary(ctx context.Context, input model.CreateDiaryInput) (string, error)
 }
 type QueryResolver interface {
 	Card(ctx context.Context, id string) (*model.Card, error)
@@ -1896,9 +1896,9 @@ func (ec *executionContext) _Mutation_createDiary(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Diary)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createDiary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1908,17 +1908,7 @@ func (ec *executionContext) fieldContext_Mutation_createDiary(ctx context.Contex
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Diary_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Diary_title(ctx, field)
-			case "content":
-				return ec.fieldContext_Diary_content(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Diary_createdAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Diary", field.Name)
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	defer func() {
@@ -5338,10 +5328,6 @@ func (ec *executionContext) unmarshalNCreateDiaryInput2lxcardᚋbackendᚋgraph�
 func (ec *executionContext) unmarshalNCreateUserInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNDiary2lxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx context.Context, sel ast.SelectionSet, v model.Diary) graphql.Marshaler {
-	return ec._Diary(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Diary) graphql.Marshaler {

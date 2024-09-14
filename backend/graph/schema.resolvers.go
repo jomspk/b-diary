@@ -58,8 +58,12 @@ func (r *mutationResolver) UnlockCard(ctx context.Context, id string) (bool, err
 }
 
 // CreateDiary is the resolver for the createDiary field.
-func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDiaryInput) (*model.Diary, error) {
-	panic(fmt.Errorf("not implemented: CreateDiary - createDiary"))
+func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDiaryInput) (string, error) {
+	diary, err := r.DiarySvc.Create(ctx, input)
+	if err != nil {
+		return "", err
+	}
+	return diary.ID, nil
 }
 
 // Card is the resolver for the card field.

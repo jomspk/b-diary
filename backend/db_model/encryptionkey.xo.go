@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// EncryptionKey represents a row from 'lxcard.encryption_key'.
+// EncryptionKey represents a row from 'lxcard.encryption_keys'.
 type EncryptionKey struct {
 	ID            string       `json:"id"`             // id
 	EncryptionKey string       `json:"encryption_key"` // encryption_key

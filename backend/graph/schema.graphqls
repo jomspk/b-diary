@@ -145,5 +145,5 @@ type Mutation {
   """
   日記作成
   """
-  createDiary(input: CreateDiaryInput!): Diary!
+  createDiary(input: CreateDiaryInput!): ID!
 }

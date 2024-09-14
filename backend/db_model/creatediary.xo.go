@@ -6,7 +6,7 @@ import (
 	"database/sql"
 )
 
-// CreateDiary represents a row from 'lxcard.create_diary'.
+// CreateDiary represents a row from 'lxcard.create_diaries'.
 type CreateDiary struct {
 	ID              string         `json:"id"`                // id
 	EncryptionKeyID sql.NullString `json:"encryption_key_id"` // encryption_key_id
