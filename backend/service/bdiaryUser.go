@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	app "lxcard/backend"
 	"lxcard/backend/db_model"
 	"lxcard/backend/graph/model"
 	"lxcard/backend/pkg/errors"
@@ -25,7 +26,7 @@ func NewBDiaryUser(db *gorm.DB, bdiaryUserRepo repository.BdiaryUser) BdiaryUser
 	}
 }
 
-func (s *BdiaryUser) Create(ctx context.Context, input model.CreateBdiaryUserInput) (*db_model.BdiaryUser, error) {
+func (s *BdiaryUser) Create(ctx context.Context, input model.CreateBdiaryUserParams) (*db_model.BdiaryUser, error) {
 	bdiaryUser := &db_model.BdiaryUser{
 		ID:            ulid.Make(),
 		FirebaseUID:   input.FirebaseUID,
@@ -33,6 +34,15 @@ func (s *BdiaryUser) Create(ctx context.Context, input model.CreateBdiaryUserInp
 	}
 
 	row, err := s.bdiaryUserRepo.Create(ctx, s.db, bdiaryUser)
+	if err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return row, nil
+}
+
+func (s *BdiaryUser) Get(ctx context.Context, FirebaseUID string) (*db_model.BdiaryUser, error) {
+	app.LogDebug(ctx).Msg("@@@@ service.bdiaryUser.go Get")
+	row, err := s.bdiaryUserRepo.Get(ctx, s.db, FirebaseUID)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}

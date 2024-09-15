@@ -11,7 +11,6 @@ import (
 
 	"lxcard/backend/env"
 	"lxcard/backend/pkg/errors"
-	tenantplugin "lxcard/backend/pkg/gorm/plugin/tenant"
 	"lxcard/backend/pkg/tenant"
 )
 
@@ -34,9 +33,9 @@ func Open(mysqlCfg *mysql.Config, logger gormlogger.Writer) (*gorm.DB, error) {
 	}
 
 	// set tenant policy plugin
-	if err := db.Use(tenantplugin.New()); err != nil {
-		return nil, errors.Wrap(err)
-	}
+	// if err := db.Use(tenantplugin.New()); err != nil {
+	// 	return nil, errors.Wrap(err)
+	// }
 	return db, nil
 }
 
@@ -62,7 +61,8 @@ func openDB(mysqlCfg *mysql.Config, logger gormlogger.Writer) (*gorm.DB, error) 
 }
 
 func New(ctx context.Context, db *gorm.DB, tenantID tenant.ID) *gorm.DB {
-	return tenantplugin.Tenant(ctx, db, tenantID)
+	return db.WithContext(ctx)
+	// return tenantplugin.Tenant(ctx, db, tenantID)
 }
 
 func NewBDiary(ctx context.Context, db *gorm.DB) *gorm.DB {

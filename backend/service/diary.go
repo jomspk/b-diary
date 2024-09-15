@@ -24,7 +24,7 @@ func NewDiary(db *gorm.DB, diaryRepo repository.Diary) Diary {
 	}
 }
 
-func (s *Diary) Create(ctx context.Context, input model.CreateDiaryInput) (*db_model.CreateDiary, error) {
+func (s *Diary) Create(ctx context.Context, input model.CreateDiaryParams) (*db_model.CreateDiary, error) {
 	diary := &db_model.CreateDiary{
 		ID:      ulid.Make(),
 		Content: input.Content,
