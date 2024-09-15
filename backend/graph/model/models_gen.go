@@ -10,8 +10,13 @@ import (
 )
 
 type CreateBdiaryUserInput struct {
-	// ユーザ名
-	Name string `json:"name"`
+	// ユーザのFirebase UID
+	FirebaseUID string `json:"firebaseUid"`
+	// ユーザのウォレットアドレス
+	WalletAddress *string `json:"walletAddress,omitempty"`
+}
+
+type CreateBdiaryUserParams struct {
 	// ユーザのFirebase UID
 	FirebaseUID string `json:"firebaseUid"`
 	// ユーザのウォレットアドレス
@@ -39,7 +44,16 @@ type CreateCardInput struct {
 	EndDate *string `json:"endDate,omitempty"`
 }
 
-type CreateDiaryInput struct {
+type CreateDiaryParams struct {
+	// 日記内容
+	Content string `json:"content"`
+	// 日記のタイトル
+	Title string `json:"title"`
+	// ユーザーID
+	UserID string `json:"userId"`
+}
+
+type CreateUserDiaryInput struct {
 	// 日記内容
 	Content string `json:"content"`
 	// 日記のタイトル
@@ -48,8 +62,6 @@ type CreateDiaryInput struct {
 	FirebaseUID string `json:"firebaseUid"`
 	// 日記作成者のウォレットアドレス
 	WalletAddress *string `json:"walletAddress,omitempty"`
-	// ユーザーID
-	UserID string `json:"userId"`
 }
 
 type CreateUserInput struct {

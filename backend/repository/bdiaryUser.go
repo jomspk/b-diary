@@ -10,4 +10,5 @@ import (
 
 type BdiaryUser interface {
 	Create(ctx context.Context, db *gorm.DB, diary *db_model.BdiaryUser) (*db_model.BdiaryUser, error)
+	Get(ctx context.Context, db *gorm.DB, FirebaseUid string) (*db_model.BdiaryUser, error)
 }

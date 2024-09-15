@@ -83,7 +83,7 @@ input UpdateCardInput {
   endDate: Date
 }
 
-input CreateDiaryInput {
+input CreateUserDiaryInput {
   """
   日記内容
   """
@@ -100,17 +100,9 @@ input CreateDiaryInput {
   日記作成者のウォレットアドレス
   """
   walletAddress: String
-  """
-  ユーザーID
-  """
-  userId: ID!
 }
 
 input CreateBdiaryUserInput {
-  """
-  ユーザ名
-  """
-  name: String!
   """
   ユーザのFirebase UID
   """
@@ -164,9 +156,5 @@ type Mutation {
   """
   日記作成
   """
-  createDiary(input: CreateDiaryInput!): ID!
-  """
-  Bdiaryユーザ作成
-  """
-  createBdiaryUser(input: CreateBdiaryUserInput!): Boolean!
+  createDiary(input: CreateUserDiaryInput!): ID!
 }

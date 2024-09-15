@@ -10,6 +10,32 @@ type Diary {
   createdAt: Time!
 }
 
+type CreateDiaryParams {
+  """
+  日記内容
+  """
+  content: String!
+  """
+  日記のタイトル
+  """
+  title: String!
+  """
+  ユーザーID
+  """
+  userId: ID!
+}
+
+type CreateBdiaryUserParams {
+  """
+  ユーザのFirebase UID
+  """
+  firebaseUid: String!
+  """
+  ユーザのウォレットアドレス
+  """
+  walletAddress: String
+}
+
 type User {
   """
   ユーザID

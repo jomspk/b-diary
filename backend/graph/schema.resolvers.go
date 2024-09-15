@@ -58,21 +58,38 @@ func (r *mutationResolver) UnlockCard(ctx context.Context, id string) (bool, err
 }
 
 // CreateDiary is the resolver for the createDiary field.
-func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDiaryInput) (string, error) {
-	diary, err := r.DiarySvc.Create(ctx, input)
+func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateUserDiaryInput) (string, error) {
+	/*
+		1. Find User
+		2. Create Non-exist user
+		3. Create Diary
+	*/
+	userId := ""
+	existUser, err := r.BdiaryUserSvc.Get(ctx, input.FirebaseUID)
+	if err != nil {
+		return "", err
+	}
+	if existUser == nil {
+		newUser, err := r.BdiaryUserSvc.Create(ctx, model.CreateBdiaryUserParams{
+			FirebaseUID:   input.FirebaseUID,
+			WalletAddress: input.WalletAddress,
+		})
+		if err != nil {
+			return "", err
+		}
+		userId = newUser.ID
+	} else {
+		userId = existUser.ID
+	}
+	diary, err := r.DiarySvc.Create(ctx, model.CreateDiaryParams{
+		Title:   input.Title,
+		Content: input.Content,
+		UserID:  userId,
+	})
 	if err != nil {
 		return "", err
 	}
 	return diary.ID, nil
-}
-
-// CreateBdiaryUser is the resolver for the createBdiaryUser field.
-func (r *mutationResolver) CreateBdiaryUser(ctx context.Context, input model.CreateBdiaryUserInput) (bool, error) {
-	bdiaryUser, err := r.BdiaryUserSvc.Create(ctx, input)
-	if err != nil {
-		return false, err
-	}
-	return bdiaryUser != nil, nil
 }
 
 // Card is the resolver for the card field.
