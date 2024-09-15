@@ -53,10 +53,12 @@ func realMain() error {
 	cardRepo := repository.NewCard()
 	userRepo := repository.NewUser()
 	diaryRepo := repository.NewDiary()
+	bdiaryUserRepo := repository.NewBDiaryUser()
 	cardSvc := service.NewCard(db, cardRepo)
 	userSvc := service.NewUser(db, userRepo)
 	diarySvc := service.NewDiary(db, diaryRepo)
-	config := graph.Config{Resolvers: graph.NewResolver(cardSvc, userSvc, diarySvc)}
+	bdiaryUserRepoSvc := service.NewBDiaryUser(db, bdiaryUserRepo)
+	config := graph.Config{Resolvers: graph.NewResolver(cardSvc, userSvc, diarySvc, bdiaryUserRepoSvc)}
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(config))
 	srv.AroundResponses(mid.ResponseErrorRequestIDMiddleware)
 

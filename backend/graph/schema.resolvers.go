@@ -66,6 +66,15 @@ func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateDi
 	return diary.ID, nil
 }
 
+// CreateBdiaryUser is the resolver for the createBdiaryUser field.
+func (r *mutationResolver) CreateBdiaryUser(ctx context.Context, input model.CreateBdiaryUserInput) (bool, error) {
+	bdiaryUser, err := r.BdiaryUserSvc.Create(ctx, input)
+	if err != nil {
+		return false, err
+	}
+	return bdiaryUser != nil, nil
+}
+
 // Card is the resolver for the card field.
 func (r *queryResolver) Card(ctx context.Context, id string) (*model.Card, error) {
 	card, err := r.CardSvc.Get(ctx, defaultTenantID, id)

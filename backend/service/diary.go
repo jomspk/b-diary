@@ -29,7 +29,7 @@ func (s *Diary) Create(ctx context.Context, input model.CreateDiaryInput) (*db_m
 		ID:      ulid.Make(),
 		Content: input.Content,
 		Title:   input.Title,
-		UserID:  "hogehoge",
+		UserID:  input.UserID,
 	}
 	row, err := s.diaryRepo.Create(ctx, s.db, diary)
 	if err != nil {

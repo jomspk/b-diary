@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+type CreateBdiaryUserInput struct {
+	// ユーザ名
+	Name string `json:"name"`
+	// ユーザのFirebase UID
+	FirebaseUID string `json:"firebaseUid"`
+	// ユーザのウォレットアドレス
+	WalletAddress *string `json:"walletAddress,omitempty"`
+}
+
 type CreateCardInput struct {
 	// カード名
 	Name string `json:"name"`
@@ -39,6 +48,8 @@ type CreateDiaryInput struct {
 	FirebaseUID string `json:"firebaseUid"`
 	// 日記作成者のウォレットアドレス
 	WalletAddress *string `json:"walletAddress,omitempty"`
+	// ユーザーID
+	UserID string `json:"userId"`
 }
 
 type CreateUserInput struct {
