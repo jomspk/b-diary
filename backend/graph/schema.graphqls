@@ -100,6 +100,25 @@ input CreateDiaryInput {
   日記作成者のウォレットアドレス
   """
   walletAddress: String
+  """
+  ユーザーID
+  """
+  userId: ID!
+}
+
+input CreateBdiaryUserInput {
+  """
+  ユーザ名
+  """
+  name: String!
+  """
+  ユーザのFirebase UID
+  """
+  firebaseUid: String!
+  """
+  ユーザのウォレットアドレス
+  """
+  walletAddress: String
 }
 
 type Query {
@@ -145,5 +164,9 @@ type Mutation {
   """
   日記作成
   """
-  createDiary(input: CreateDiaryInput!): Diary!
+  createDiary(input: CreateDiaryInput!): ID!
+  """
+  Bdiaryユーザ作成
+  """
+  createBdiaryUser(input: CreateBdiaryUserInput!): Boolean!
 }

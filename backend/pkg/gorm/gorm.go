@@ -64,3 +64,7 @@ func openDB(mysqlCfg *mysql.Config, logger gormlogger.Writer) (*gorm.DB, error) 
 func New(ctx context.Context, db *gorm.DB, tenantID tenant.ID) *gorm.DB {
 	return tenantplugin.Tenant(ctx, db, tenantID)
 }
+
+func NewBDiary(ctx context.Context, db *gorm.DB) *gorm.DB {
+	return db.WithContext(ctx)
+}

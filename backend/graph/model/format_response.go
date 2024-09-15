@@ -15,6 +15,14 @@ func FormatUserResponse(row *db_model.User) *User {
 	}
 }
 
+func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
+	return &Diary{
+		ID:      row.ID,
+		Title:   row.Title,
+		Content: row.Content,
+	}
+}
+
 func FormatCardResponse(row *db_model.Card) (*Card, error) {
 	var s CardState
 	if err := s.UnmarshalGQL(strcase.ToScreamingSnake(row.State.String())); err != nil {
