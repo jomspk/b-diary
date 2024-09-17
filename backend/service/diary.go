@@ -45,3 +45,11 @@ func (s *Diary) List(ctx context.Context, input model.DiariesInput) ([]*db_model
 	}
 	return rows, nil
 }
+
+func (s *Diary) Update(ctx context.Context, input model.UpdateDiaryInput) (*db_model.CreateDiary, error) {
+	row, err := s.diaryRepo.Update(ctx, s.db, input)
+	if err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return row, nil
+}

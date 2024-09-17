@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"lxcard/backend/db_model"
+	"lxcard/backend/graph/model"
 	"lxcard/backend/pkg/errors"
 
 	"gorm.io/gorm"
@@ -35,4 +36,17 @@ func (r diary) List(ctx context.Context, db *gorm.DB, date time.Time, firebaseUi
 		return nil, errors.Wrap(err)
 	}
 	return diaries, nil
+}
+
+func (r diary) Update(ctx context.Context, db *gorm.DB, diary model.UpdateDiaryInput) (*db_model.CreateDiary, error) {
+	var row db_model.CreateDiary
+	if err := db.Where("id = ?", diary.ID).First(&row).Error; err != nil {
+		return nil, errors.Wrap(err)
+	}
+	row.Content = diary.Content
+	row.Title = diary.Title
+	if err := db.Save(&row).Error; err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return &row, nil
 }

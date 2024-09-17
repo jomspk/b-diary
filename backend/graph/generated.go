@@ -94,6 +94,7 @@ type ComplexityRoot struct {
 		LockCard    func(childComplexity int, id string) int
 		UnlockCard  func(childComplexity int, id string) int
 		UpdateCard  func(childComplexity int, id string, input model.UpdateCardInput) int
+		UpdateDiary func(childComplexity int, input model.UpdateDiaryInput) int
 	}
 
 	Query struct {
@@ -120,6 +121,7 @@ type MutationResolver interface {
 	LockCard(ctx context.Context, id string) (bool, error)
 	UnlockCard(ctx context.Context, id string) (bool, error)
 	CreateDiary(ctx context.Context, input model.CreateUserDiaryInput) (string, error)
+	UpdateDiary(ctx context.Context, input model.UpdateDiaryInput) (string, error)
 }
 type QueryResolver interface {
 	Card(ctx context.Context, id string) (*model.Card, error)
@@ -387,6 +389,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateCard(childComplexity, args["id"].(string), args["input"].(model.UpdateCardInput)), true
 
+	case "Mutation.updateDiary":
+		if e.complexity.Mutation.UpdateDiary == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateDiary_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateDiary(childComplexity, args["input"].(model.UpdateDiaryInput)), true
+
 	case "Query.card":
 		if e.complexity.Query.Card == nil {
 			break
@@ -453,6 +467,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputDiariesInput,
 		ec.unmarshalInputUpdateCardInput,
+		ec.unmarshalInputUpdateDiaryInput,
 	)
 	first := true
 
@@ -666,6 +681,21 @@ func (ec *executionContext) field_Mutation_updateCard_args(ctx context.Context, 
 		}
 	}
 	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateDiary_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateDiaryInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -2184,6 +2214,61 @@ func (ec *executionContext) fieldContext_Mutation_createDiary(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createDiary_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateDiary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateDiary(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateDiary(rctx, fc.Args["input"].(model.UpdateDiaryInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateDiary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateDiary_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4767,6 +4852,47 @@ func (ec *executionContext) unmarshalInputUpdateCardInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateDiaryInput(ctx context.Context, obj interface{}) (model.UpdateDiaryInput, error) {
+	var it model.UpdateDiaryInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "content", "title"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "content":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Content = data
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -5120,6 +5246,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createDiary":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createDiary(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateDiary":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateDiary(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -5859,6 +5992,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 
 func (ec *executionContext) unmarshalNUpdateCardInput2lxcardᚋbackendᚋgraphᚋmodelᚐUpdateCardInput(ctx context.Context, v interface{}) (model.UpdateCardInput, error) {
 	res, err := ec.unmarshalInputUpdateCardInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx context.Context, v interface{}) (model.UpdateDiaryInput, error) {
+	res, err := ec.unmarshalInputUpdateDiaryInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
