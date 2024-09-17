@@ -113,6 +113,17 @@ input CreateBdiaryUserInput {
   walletAddress: String
 }
 
+input DiariesInput {
+  """
+  日記データ取得日時
+  """
+  date: Time!
+  """
+  Firebase UID
+  """
+  firebaseUid: String!
+}
+
 type Query {
   """
   カード取得
@@ -129,7 +140,7 @@ type Query {
   """
   日記取得
   """
-  diaries(month: Time!): [Diary!]!
+  diaries(input: DiariesInput!): [Diary!]!
 }
 
 type Mutation {

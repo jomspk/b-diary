@@ -6,8 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
-	"time"
 
 	"lxcard/backend/db_model"
 	"lxcard/backend/graph/model"
@@ -130,8 +128,16 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 }
 
 // Diaries is the resolver for the diaries field.
-func (r *queryResolver) Diaries(ctx context.Context, month time.Time) ([]*model.Diary, error) {
-	panic(fmt.Errorf("not implemented: Diaries - diaries"))
+func (r *queryResolver) Diaries(ctx context.Context, input model.DiariesInput) ([]*model.Diary, error) {
+	diaries, err := r.DiarySvc.List(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	res := make([]*model.Diary, 0, len(diaries))
+	for _, diary := range diaries {
+		res = append(res, model.FormatDiaryResponse(diary))
+	}
+	return res, nil
 }
 
 // Mutation returns MutationResolver implementation.

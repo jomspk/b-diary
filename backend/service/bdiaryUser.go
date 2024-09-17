@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-	app "lxcard/backend"
 	"lxcard/backend/db_model"
 	"lxcard/backend/graph/model"
 	"lxcard/backend/pkg/errors"
@@ -41,7 +40,6 @@ func (s *BdiaryUser) Create(ctx context.Context, input model.CreateBdiaryUserPar
 }
 
 func (s *BdiaryUser) Get(ctx context.Context, FirebaseUID string) (*db_model.BdiaryUser, error) {
-	app.LogDebug(ctx).Msg("@@@@ service.bdiaryUser.go Get")
 	row, err := s.bdiaryUserRepo.Get(ctx, s.db, FirebaseUID)
 	if err != nil {
 		return nil, errors.Wrap(err)

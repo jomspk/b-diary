@@ -4,9 +4,21 @@ scalar Date
 scalar Time
 
 type Diary {
+  """
+  日記ID
+  """
   id: ID!
+  """
+  日記タイトル
+  """
   title: String!
+  """
+  日記内容
+  """
   content: String!
+  """
+  日記作成日時
+  """
   createdAt: Time!
 }
 

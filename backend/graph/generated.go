@@ -99,7 +99,7 @@ type ComplexityRoot struct {
 	Query struct {
 		Card    func(childComplexity int, id string) int
 		Cards   func(childComplexity int) int
-		Diaries func(childComplexity int, month time.Time) int
+		Diaries func(childComplexity int, input model.DiariesInput) int
 		Users   func(childComplexity int) int
 	}
 
@@ -125,7 +125,7 @@ type QueryResolver interface {
 	Card(ctx context.Context, id string) (*model.Card, error)
 	Cards(ctx context.Context) ([]*model.Card, error)
 	Users(ctx context.Context) ([]*model.User, error)
-	Diaries(ctx context.Context, month time.Time) ([]*model.Diary, error)
+	Diaries(ctx context.Context, input model.DiariesInput) ([]*model.Diary, error)
 }
 
 type executableSchema struct {
@@ -416,7 +416,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Diaries(childComplexity, args["month"].(time.Time)), true
+		return e.complexity.Query.Diaries(childComplexity, args["input"].(model.DiariesInput)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -451,6 +451,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateCardInput,
 		ec.unmarshalInputCreateUserDiaryInput,
 		ec.unmarshalInputCreateUserInput,
+		ec.unmarshalInputDiariesInput,
 		ec.unmarshalInputUpdateCardInput,
 	)
 	first := true
@@ -701,15 +702,15 @@ func (ec *executionContext) field_Query_card_args(ctx context.Context, rawArgs m
 func (ec *executionContext) field_Query_diaries_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 time.Time
-	if tmp, ok := rawArgs["month"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("month"))
-		arg0, err = ec.unmarshalNTime2timeᚐTime(ctx, tmp)
+	var arg0 model.DiariesInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDiariesInput2lxcardᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["month"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -2416,7 +2417,7 @@ func (ec *executionContext) _Query_diaries(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Diaries(rctx, fc.Args["month"].(time.Time))
+		return ec.resolvers.Query().Diaries(rctx, fc.Args["input"].(model.DiariesInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4649,6 +4650,40 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDiariesInput(ctx context.Context, obj interface{}) (model.DiariesInput, error) {
+	var it model.DiariesInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"date", "firebaseUid"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "date":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
+			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Date = data
+		case "firebaseUid":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firebaseUid"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.FirebaseUID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateCardInput(ctx context.Context, obj interface{}) (model.UpdateCardInput, error) {
 	var it model.UpdateCardInput
 	asMap := map[string]interface{}{}
@@ -5715,6 +5750,11 @@ func (ec *executionContext) unmarshalNCreateUserDiaryInput2lxcardᚋbackendᚋgr
 
 func (ec *executionContext) unmarshalNCreateUserInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDiariesInput2lxcardᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx context.Context, v interface{}) (model.DiariesInput, error) {
+	res, err := ec.unmarshalInputDiariesInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
