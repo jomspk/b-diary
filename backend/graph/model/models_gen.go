@@ -69,10 +69,21 @@ type CreateUserInput struct {
 	Name string `json:"name"`
 }
 
+type DiariesInput struct {
+	// 日記データ取得日時
+	Date time.Time `json:"date"`
+	// Firebase UID
+	FirebaseUID string `json:"firebaseUid"`
+}
+
 type Diary struct {
-	ID        string    `json:"id"`
-	Title     string    `json:"title"`
-	Content   string    `json:"content"`
+	// 日記ID
+	ID string `json:"id"`
+	// 日記タイトル
+	Title string `json:"title"`
+	// 日記内容
+	Content string `json:"content"`
+	// 日記作成日時
 	CreatedAt time.Time `json:"createdAt"`
 }
 

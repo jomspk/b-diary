@@ -15,11 +15,12 @@ func FormatUserResponse(row *db_model.User) *User {
 	}
 }
 
-func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
+func FormatDiaryResponse(row *db_model.Diaries) *Diary {
 	return &Diary{
-		ID:      row.ID,
-		Title:   row.Title,
-		Content: row.Content,
+		ID:        row.ID,
+		Title:     row.Title,
+		Content:   row.Content,
+		CreatedAt: row.CreatedAt,
 	}
 }
 

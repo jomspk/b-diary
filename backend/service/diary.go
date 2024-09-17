@@ -37,3 +37,11 @@ func (s *Diary) Create(ctx context.Context, input model.CreateDiaryParams) (*db_
 	}
 	return row, nil
 }
+
+func (s *Diary) List(ctx context.Context, input model.DiariesInput) ([]*db_model.Diaries, error) {
+	rows, err := s.diaryRepo.List(ctx, s.db, input.Date, input.FirebaseUID)
+	if err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return rows, nil
+}
