@@ -124,6 +124,21 @@ input DiariesInput {
   firebaseUid: String!
 }
 
+input UpdateDiaryInput {
+  """
+  日記ID
+  """
+  id: ID!
+  """
+  日記内容
+  """
+  content: String!
+  """
+  日記のタイトル
+  """
+  title: String!
+}
+
 type Query {
   """
   カード取得
@@ -168,4 +183,8 @@ type Mutation {
   日記作成
   """
   createDiary(input: CreateUserDiaryInput!): ID!
+  """
+  日記更新
+  """
+  updateDiary(input: UpdateDiaryInput!): ID!
 }

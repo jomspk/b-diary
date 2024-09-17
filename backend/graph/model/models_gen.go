@@ -114,6 +114,15 @@ type UpdateCardInput struct {
 	EndDate *string `json:"endDate,omitempty"`
 }
 
+type UpdateDiaryInput struct {
+	// 日記ID
+	ID string `json:"id"`
+	// 日記内容
+	Content string `json:"content"`
+	// 日記のタイトル
+	Title string `json:"title"`
+}
+
 type User struct {
 	// ユーザID
 	ID string `json:"id"`

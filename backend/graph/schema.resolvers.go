@@ -90,6 +90,15 @@ func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateUs
 	return diary.ID, nil
 }
 
+// UpdateDiary is the resolver for the updateDiary field.
+func (r *mutationResolver) UpdateDiary(ctx context.Context, input model.UpdateDiaryInput) (string, error) {
+	diary, err := r.DiarySvc.Update(ctx, input)
+	if err != nil {
+		return "", err
+	}
+	return diary.ID, nil
+}
+
 // Card is the resolver for the card field.
 func (r *queryResolver) Card(ctx context.Context, id string) (*model.Card, error) {
 	card, err := r.CardSvc.Get(ctx, defaultTenantID, id)
