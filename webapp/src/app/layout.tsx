@@ -2,7 +2,6 @@ import { Inter as FontSans } from "next/font/google";
 import { ApolloProvider } from "@/components/provider/ApolloProvider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
-import { Sidebar, sideBarWidth } from "@/components/layout/Sidebar";
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -24,10 +23,7 @@ export default function RootLayout({
         )}
       >
         <ApolloProvider>
-          <Sidebar />
-          <main className="h-full" style={{ marginLeft: sideBarWidth }}>
-            {children}
-          </main>
+          <main className="h-full">{children}</main>
           <Toaster />
         </ApolloProvider>
       </body>
