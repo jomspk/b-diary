@@ -37,3 +37,6 @@ devbox/mysql/mysql.log
 node_modules/
 
 tmp/
+
+# images
+webapp/public/*.png
