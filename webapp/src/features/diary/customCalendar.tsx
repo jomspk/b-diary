@@ -53,10 +53,10 @@ export default function CustomCalendar({
       days.push(
         <div
           key={day}
-          className={`h-10 flex items-center justify-center rounded-full cursor-pointer
+          className={`flex items-center justify-center rounded-full cursor-pointer aspect-square
             ${isToday ? "bg-orange-500 text-white" : ""}
             ${isSelected ? "border-2 border-orange-500" : ""}
-            ${isHighlighted ? "bg-orange-200" : ""}
+            ${isHighlighted ? "bg-orange-100" : ""}
           `}
           onClick={() => setDate(currentDate)}
         >
@@ -80,24 +80,24 @@ export default function CustomCalendar({
     <div className="w-full max-w-md mx-auto p-4 bg-white rounded-lg shadow">
       <div className="flex justify-between flex-col items-center mb-4 space-y-2">
         <div className="space-x-2">
-          <Button variant="outline" size="icon" onClick={() => changeYear(-1)}>
+          <Button variant="ghost" size="icon" onClick={() => changeYear(-1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="font-semibold">
             {date.toLocaleString("ja-JP", { year: "numeric" })}
           </span>
-          <Button variant="outline" size="icon" onClick={() => changeYear(1)}>
+          <Button variant="ghost" size="icon" onClick={() => changeYear(1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         <div className="space-x-2">
-          <Button variant="outline" size="icon" onClick={() => changeMonth(-1)}>
+          <Button variant="ghost" size="icon" onClick={() => changeMonth(-1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="font-semibold">
             {date.toLocaleString("ja-JP", { month: "long" })}
           </span>
-          <Button variant="outline" size="icon" onClick={() => changeMonth(1)}>
+          <Button variant="ghost" size="icon" onClick={() => changeMonth(1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

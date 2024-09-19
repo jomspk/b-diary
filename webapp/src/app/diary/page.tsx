@@ -49,6 +49,7 @@ export default function Component() {
     <div className="min-h-full grid grid-cols-3">
       <div className="bg-[url('/bdiary_background.png')] bg-cover bg-center">
         <div className="space-y-4 col-span-1 p-4">
+          <div className="text-white text-xl">琥珀</div>
           <CustomCalendar
             date={date}
             setDate={setDate}
@@ -57,22 +58,22 @@ export default function Component() {
           {/* 取得する日記の数を三つに固定する */}
           <div className="p-4 bg-white rounded-md space-y-4">
             <div className="font-bold">履歴</div>
-            <div className="space-y-4">
-              {pastEntries.map((entry) => (
-                <div key={entry.id} className="flex space-x-4">
+            {pastEntries.map((entry) => (
+              <div key={entry.id}>
+                <div className="bg-gray-300 h-px my-3"></div>
+                <div className="flex space-x-4">
                   <span className="text-sm font-medium">
-                    {date?.toLocaleDateString("ja-JP", {
+                    {entry.date?.toLocaleDateString("ja-JP", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })}
                   </span>
-                  <p className="text-sm text-muted-foreground">
-                    {truncateText(entry.content)}
-                  </p>
+                  <p className="text-sm">{truncateText(entry.content)}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+            <div className="bg-gray-300 h-px my-3"></div>
           </div>
         </div>
       </div>
