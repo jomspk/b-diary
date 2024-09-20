@@ -3,6 +3,7 @@ import { ApolloProvider } from "@/components/provider/ApolloProvider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -16,17 +17,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <ApolloProvider>
-          <main className="h-full">{children}</main>
-          <Toaster />
-        </ApolloProvider>
-      </body>
+      <UserProvider>
+        <body
+          className={cn(
+            "h-screen bg-background font-sans antialiased",
+            fontSans.variable
+          )}
+        >
+          <ApolloProvider>
+            <main className="h-full">{children}</main>
+            <Toaster />
+          </ApolloProvider>
+        </body>
+      </UserProvider>
     </html>
   );
 }

@@ -21,7 +21,9 @@ export default function Component() {
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button className="w-full sm:w-auto">ログイン</Button>
+          <Button className="w-full sm:w-auto">
+            <a href="/api/auth/login">ログイン</a>
+          </Button>
         </CardFooter>
       </Card>
     </div>
