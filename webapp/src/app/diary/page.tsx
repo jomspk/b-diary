@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import CustomCalendar from "@/features/diary/customCalendar";
+import { DiaryCreation } from "@/features/diary/DiaryCreation";
 
 const previewDiaryMaxLength = 10;
 
@@ -78,32 +77,7 @@ export default function Component() {
         </div>
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
-        <div className="p-10 flex flex-col space-y-4 flex-grow">
-          <div className="space-y-2">
-            <div className="text-sm">
-              {date?.toLocaleDateString("ja-JP", { year: "numeric" })}
-            </div>
-            <div className="text-2xl font-bold">
-              {date?.toLocaleDateString("ja-JP", {
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-            <div>
-              <div className="bg-orange-500 h-0.5 w-1/12"></div>
-              <div className="bg-orange-500 h-px w-5/12"></div>
-            </div>
-          </div>
-          <Textarea
-            placeholder="今日の出来事を書いてください..."
-            className="flex-grow resize-none"
-          />
-        </div>
-        <div className="bg-gray-200 flex justify-center w-full p-3">
-          <Button className="bg-orange-500 w-3/12 hover:bg-orange-400">
-            保存
-          </Button>
-        </div>
+        <DiaryCreation date={date} />
       </div>
     </div>
   );

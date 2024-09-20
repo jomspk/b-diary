@@ -53,7 +53,7 @@ export default function CustomCalendar({
       days.push(
         <div
           key={day}
-          className={`flex items-center justify-center rounded-full cursor-pointer aspect-square
+          className={`flex items-center justify-center rounded-full cursor-pointer h-10 w-10
             ${isToday ? "bg-orange-500 text-white" : ""}
             ${isSelected ? "border-2 border-orange-500" : ""}
             ${isHighlighted ? "bg-orange-100" : ""}
@@ -104,7 +104,10 @@ export default function CustomCalendar({
       </div>
       <div className="grid grid-cols-7 gap-2 mb-2">
         {WEEKDAYS.map((day) => (
-          <div key={day} className="text-center font-semibold text-orange-500">
+          <div
+            key={day}
+            className="text-center font-semibold text-orange-500 h-10 w-10"
+          >
             {day}
           </div>
         ))}

@@ -73,6 +73,20 @@ export type CardState =
   /** 一時停止 */
   | "LOCKED";
 
+export type CreateBdiaryUserInput = {
+  /** ユーザのFirebase UID */
+  firebaseUid: Scalars["String"]["input"];
+  /** ユーザのウォレットアドレス */
+  walletAddress?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type CreateBdiaryUserParams = {
+  /** ユーザのFirebase UID */
+  firebaseUid: Scalars["String"]["output"];
+  /** ユーザのウォレットアドレス */
+  walletAddress: Maybe<Scalars["String"]["output"]>;
+};
+
 export type CreateCardInput = {
   /** カード説明 */
   description: Scalars["String"]["input"];
@@ -94,14 +108,54 @@ export type CreateCardInput = {
   viewerIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
 };
 
+export type CreateDiaryParams = {
+  /** 日記内容 */
+  content: Scalars["String"]["output"];
+  /** 日記のタイトル */
+  title: Scalars["String"]["output"];
+  /** ユーザーID */
+  userId: Scalars["ID"]["output"];
+};
+
+export type CreateUserDiaryInput = {
+  /** 日記内容 */
+  content: Scalars["String"]["input"];
+  /** 日記作成者のFirebase UID */
+  firebaseUid: Scalars["String"]["input"];
+  /** 日記のタイトル */
+  title: Scalars["String"]["input"];
+  /** 日記作成者のウォレットアドレス */
+  walletAddress?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type CreateUserInput = {
   /** ユーザ名 */
   name: Scalars["String"]["input"];
 };
 
+export type DiariesInput = {
+  /** 日記データ取得日時 */
+  date: Scalars["Time"]["input"];
+  /** Firebase UID */
+  firebaseUid: Scalars["String"]["input"];
+};
+
+export type Diary = {
+  /** 日記内容 */
+  content: Scalars["String"]["output"];
+  /** 日記作成日時 */
+  createdAt: Scalars["Time"]["output"];
+  /** 日記ID */
+  id: Scalars["ID"]["output"];
+  /** 日記タイトル */
+  title: Scalars["String"]["output"];
+};
+
 export type Mutation = {
   /** カード作成 */
   createCard: Card;
+  /** 日記作成 */
+  createDiary: Scalars["ID"]["output"];
   /** ユーザ作成 */
   createUser: User;
   /** カードロック */
@@ -110,10 +164,16 @@ export type Mutation = {
   unlockCard: Scalars["Boolean"]["output"];
   /** カード更新 */
   updateCard: Card;
+  /** 日記更新 */
+  updateDiary: Scalars["ID"]["output"];
 };
 
 export type MutationCreateCardArgs = {
   input: CreateCardInput;
+};
+
+export type MutationCreateDiaryArgs = {
+  input: CreateUserDiaryInput;
 };
 
 export type MutationCreateUserArgs = {
@@ -133,17 +193,27 @@ export type MutationUpdateCardArgs = {
   input: UpdateCardInput;
 };
 
+export type MutationUpdateDiaryArgs = {
+  input: UpdateDiaryInput;
+};
+
 export type Query = {
   /** カード取得 */
   card: Card;
   /** カード一覧取得 */
   cards: Array<Card>;
+  /** 日記取得 */
+  diaries: Array<Diary>;
   /** ユーザ一覧取得 */
   users: Array<User>;
 };
 
 export type QueryCardArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type QueryDiariesArgs = {
+  input: DiariesInput;
 };
 
 export type UpdateCardInput = {
@@ -165,6 +235,15 @@ export type UpdateCardInput = {
   totalMaxAmount?: InputMaybe<Scalars["Uint"]["input"]>;
   /** カード閲覧者IDの配列 */
   viewerIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
+};
+
+export type UpdateDiaryInput = {
+  /** 日記内容 */
+  content: Scalars["String"]["input"];
+  /** 日記ID */
+  id: Scalars["ID"]["input"];
+  /** 日記のタイトル */
+  title: Scalars["String"]["input"];
 };
 
 export type User = {
@@ -309,6 +388,12 @@ export type UnlockCardMutationVariables = Exact<{
 }>;
 
 export type UnlockCardMutation = { unlockCard: boolean };
+
+export type CreateDiaryMutationVariables = Exact<{
+  input: CreateUserDiaryInput;
+}>;
+
+export type CreateDiaryMutation = { createDiary: string };
 
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
@@ -1066,6 +1151,51 @@ export const UnlockCardDocument = {
     },
   ],
 } as unknown as DocumentNode<UnlockCardMutation, UnlockCardMutationVariables>;
+export const CreateDiaryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateDiary" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateUserDiaryInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createDiary" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateDiaryMutation, CreateDiaryMutationVariables>;
 export const CreateUserDocument = {
   kind: "Document",
   definitions: [
