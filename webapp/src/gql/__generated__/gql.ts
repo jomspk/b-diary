@@ -41,6 +41,8 @@ const documents = {
     types.UnlockCardDocument,
   "\n  mutation CreateDiary($input: CreateUserDiaryInput!) {\n    createDiary(input: $input)\n  }\n":
     types.CreateDiaryDocument,
+  "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      createdAt\n    }\n  }\n":
+    types.GetDiariesDocument,
   "\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      id\n    }\n  }\n":
     types.CreateUserDocument,
   "\n  query GetUserListPage {\n    users {\n      ...UserListTableUser\n    }\n  }\n":
@@ -147,6 +149,12 @@ export function gql(
 export function gql(
   source: "\n  mutation CreateDiary($input: CreateUserDiaryInput!) {\n    createDiary(input: $input)\n  }\n"
 ): (typeof documents)["\n  mutation CreateDiary($input: CreateUserDiaryInput!) {\n    createDiary(input: $input)\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      createdAt\n    }\n  }\n"
+): (typeof documents)["\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      createdAt\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
