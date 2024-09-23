@@ -395,6 +395,19 @@ export type CreateDiaryMutationVariables = Exact<{
 
 export type CreateDiaryMutation = { createDiary: string };
 
+export type GetDiariesQueryVariables = Exact<{
+  input: DiariesInput;
+}>;
+
+export type GetDiariesQuery = {
+  diaries: Array<{
+    id: string;
+    title: string;
+    content: string;
+    createdAt: TimeString;
+  }>;
+};
+
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
@@ -1196,6 +1209,60 @@ export const CreateDiaryDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateDiaryMutation, CreateDiaryMutationVariables>;
+export const GetDiariesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetDiaries" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DiariesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "diaries" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "content" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetDiariesQuery, GetDiariesQueryVariables>;
 export const CreateUserDocument = {
   kind: "Document",
   definitions: [
