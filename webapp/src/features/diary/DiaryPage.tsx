@@ -23,16 +23,11 @@ const Query = gql(/* GraphQL */ `
 
 export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  if (!user || !user.sub) {
-    return <div>ユーザー情報を取得できません</div>;
-  }
-  if (!date) {
-    return <div>日付を取得できません</div>;
-  }
-  const formattedDate = date.toISOString();
+  const formattedDate = date ? date.toISOString() : "";
+  let firebaseUid = user && user.sub ? user.sub : "";
   const { data } = useSuspenseQuery(Query, {
     variables: {
-      input: { date: formattedDate as TimeString, firebaseUid: user.sub },
+      input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
     },
   });
 
