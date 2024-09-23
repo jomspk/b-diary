@@ -6,6 +6,7 @@ import { DiaryCreation } from "@/features/diary/DiaryCreation";
 import { gql } from "@/gql/__generated__";
 import { useSuspenseQuery } from "@apollo/client";
 import { TimeString } from "@/gql/__generated__/graphql";
+import { Claims } from "@auth0/nextjs-auth0";
 
 const previewDiaryMaxLength = 10;
 
@@ -20,9 +21,15 @@ const Query = gql(/* GraphQL */ `
   }
 `);
 
-export default function DiaryPage({ user }: { user: any }) {
+export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const formattedDate = date ? date.toISOString() : "";
+  if (!user || !user.sub) {
+    return <div>ユーザー情報を取得できません</div>;
+  }
+  if (!date) {
+    return <div>日付を取得できません</div>;
+  }
+  const formattedDate = date.toISOString();
   const { data } = useSuspenseQuery(Query, {
     variables: {
       input: { date: formattedDate as TimeString, firebaseUid: user.sub },
