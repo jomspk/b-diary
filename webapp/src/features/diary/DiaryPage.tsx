@@ -31,6 +31,10 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     },
   });
 
+  const results = data.diaries.filter((diary) => {
+    return new Date(diary.createdAt).toDateString() === date?.toDateString();
+  });
+
   // 過去の日記データのモックアップ（実際のアプリケーションではデータベースから取得します）
   const pastEntries = [
     {
@@ -89,7 +93,18 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
         </div>
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
-        <DiaryCreation date={date} />
+        {results.length > 0 ? (
+          <div>
+            {results.map((diary) => (
+              <div key={diary.id}>
+                {diary.title}
+                {diary.content}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <DiaryCreation date={date} />
+        )}
       </div>
     </div>
   );
