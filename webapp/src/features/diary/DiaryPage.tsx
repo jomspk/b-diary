@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import CustomCalendar from "@/features/diary/customCalendar";
+import CustomCalendar from "@/features/diary/CustomCalendar";
 import { DiaryCreation } from "@/features/diary/DiaryCreation";
+import ReadDiary from "@/features/diary/ReadDiary";
 import { gql } from "@/gql/__generated__";
 import { useSuspenseQuery } from "@apollo/client";
 import { TimeString } from "@/gql/__generated__/graphql";
@@ -25,6 +26,11 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const formattedDate = date ? date.toISOString() : "";
   const firebaseUid = user && user.sub ? user.sub : "";
+  const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
+  const monthAndDay = date?.toLocaleDateString("ja-JP", {
+    month: "long",
+    day: "numeric",
+  });
   const { data } = useSuspenseQuery(Query, {
     variables: {
       input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
@@ -94,16 +100,9 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
         {results.length > 0 ? (
-          <div>
-            {results.map((diary) => (
-              <div key={diary.id}>
-                {diary.title}
-                {diary.content}
-              </div>
-            ))}
-          </div>
+          <ReadDiary results={results} year={year} monthAndDay={monthAndDay} />
         ) : (
-          <DiaryCreation date={date} />
+          <DiaryCreation year={year} monthAndDay={monthAndDay} />
         )}
       </div>
     </div>

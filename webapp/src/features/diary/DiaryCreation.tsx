@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import Date from "@/components/layout/Date";
 import { gql } from "@/gql/__generated__";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -15,20 +16,20 @@ const Mutation = gql(/* GraphQL */ `
 `);
 
 type DiaryCreationProps = {
-  date: Date | undefined;
+  year: string | undefined;
+  monthAndDay: string | undefined;
 };
 
-export function DiaryCreation({ date }: DiaryCreationProps) {
-  const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
-  const monthAndDay = date?.toLocaleDateString("ja-JP", {
-    month: "long",
-    day: "numeric",
-  });
+export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
-  const [title, setTitle] = useState<string>(`${year}${monthAndDay}の日記`);
+  const [title, setTitle] = useState<string>("");
   const [createDiary] = useMutation(Mutation);
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
+
+  useEffect(() => {
+    setTitle(`${year}${monthAndDay}の日記`);
+  }, [year, monthAndDay]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
@@ -65,20 +66,14 @@ export function DiaryCreation({ date }: DiaryCreationProps) {
   return (
     <>
       <div className="p-10 flex flex-col space-y-4 flex-grow">
-        <div className="space-y-2">
-          <div className="text-sm">{year}</div>
-          <div className="text-2xl font-bold">{monthAndDay}</div>
-          <div>
-            <div className="bg-orange-500 h-0.5 w-1/12"></div>
-            <div className="bg-orange-500 h-px w-5/12"></div>
-          </div>
-        </div>
+        <Date year={year} monthAndDay={monthAndDay} />
         <Textarea
           placeholder="タイトルを書いてください..."
           className="resize-none"
-          defaultValue={title}
+          defaultValue={`${year}${monthAndDay}の日記`}
           maxLength={titleMaxLength}
           onChange={(event) => setTitle(event.target.value)}
+          value={title}
         />
         <p>
           {title.length} / {titleMaxLength} 文字
