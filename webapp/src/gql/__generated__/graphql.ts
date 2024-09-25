@@ -147,8 +147,12 @@ export type Diary = {
   createdAt: Scalars["Time"]["output"];
   /** 日記ID */
   id: Scalars["ID"]["output"];
+  /** ブロックチェーンに保存された日付 */
+  saveToBcAt: Maybe<Scalars["Time"]["output"]>;
   /** 日記タイトル */
   title: Scalars["String"]["output"];
+  /** トークンID */
+  tokenId: Maybe<Scalars["Uint"]["output"]>;
 };
 
 export type Mutation = {
@@ -405,8 +409,16 @@ export type GetDiariesQuery = {
     title: string;
     content: string;
     createdAt: TimeString;
+    saveToBcAt: TimeString | null;
+    tokenId: number | null;
   }>;
 };
+
+export type UpdateDiaryMutationVariables = Exact<{
+  input: UpdateDiaryInput;
+}>;
+
+export type UpdateDiaryMutation = { updateDiary: string };
 
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
@@ -1255,6 +1267,8 @@ export const GetDiariesDocument = {
                 { kind: "Field", name: { kind: "Name", value: "title" } },
                 { kind: "Field", name: { kind: "Name", value: "content" } },
                 { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "saveToBcAt" } },
+                { kind: "Field", name: { kind: "Name", value: "tokenId" } },
               ],
             },
           },
@@ -1263,6 +1277,51 @@ export const GetDiariesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetDiariesQuery, GetDiariesQueryVariables>;
+export const UpdateDiaryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateDiary" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateDiaryInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateDiary" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateDiaryMutation, UpdateDiaryMutationVariables>;
 export const CreateUserDocument = {
   kind: "Document",
   definitions: [

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import CustomCalendar from "@/features/diary/customCalendar";
+import CustomCalendar from "@/features/diary/CustomCalendar";
 import { DiaryCreation } from "@/features/diary/DiaryCreation";
+import { UpdateDiary } from "@/features/diary/UpdateDiary";
+import ReadDiary from "@/features/diary/ReadDiary";
 import { gql } from "@/gql/__generated__";
 import { useSuspenseQuery } from "@apollo/client";
 import { TimeString } from "@/gql/__generated__/graphql";
@@ -17,6 +19,8 @@ const Query = gql(/* GraphQL */ `
       title
       content
       createdAt
+      saveToBcAt
+      tokenId
     }
   }
 `);
@@ -25,10 +29,19 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const formattedDate = date ? date.toISOString() : "";
   const firebaseUid = user && user.sub ? user.sub : "";
+  const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
+  const monthAndDay = date?.toLocaleDateString("ja-JP", {
+    month: "long",
+    day: "numeric",
+  });
   const { data } = useSuspenseQuery(Query, {
     variables: {
       input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
     },
+  });
+
+  const diary = data.diaries.find((diary) => {
+    return new Date(diary.createdAt).toDateString() === date?.toDateString();
   });
 
   // 過去の日記データのモックアップ（実際のアプリケーションではデータベースから取得します）
@@ -89,7 +102,15 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
         </div>
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
-        <DiaryCreation date={date} />
+        {diary ? (
+          diary.saveToBcAt ? (
+            <ReadDiary diary={diary} year={year} monthAndDay={monthAndDay} />
+          ) : (
+            <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} />
+          )
+        ) : (
+          <DiaryCreation year={year} monthAndDay={monthAndDay} />
+        )}
       </div>
     </div>
   );
