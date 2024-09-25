@@ -147,8 +147,12 @@ export type Diary = {
   createdAt: Scalars["Time"]["output"];
   /** 日記ID */
   id: Scalars["ID"]["output"];
+  /** ブロックチェーンに保存された日付 */
+  saveToBcAt: Maybe<Scalars["Time"]["output"]>;
   /** 日記タイトル */
   title: Scalars["String"]["output"];
+  /** トークンID */
+  tokenId: Maybe<Scalars["Uint"]["output"]>;
 };
 
 export type Mutation = {
@@ -405,6 +409,8 @@ export type GetDiariesQuery = {
     title: string;
     content: string;
     createdAt: TimeString;
+    saveToBcAt: TimeString | null;
+    tokenId: number | null;
   }>;
 };
 
@@ -1255,6 +1261,8 @@ export const GetDiariesDocument = {
                 { kind: "Field", name: { kind: "Name", value: "title" } },
                 { kind: "Field", name: { kind: "Name", value: "content" } },
                 { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                { kind: "Field", name: { kind: "Name", value: "saveToBcAt" } },
+                { kind: "Field", name: { kind: "Name", value: "tokenId" } },
               ],
             },
           },

@@ -20,6 +20,14 @@ type Diary {
   日記作成日時
   """
   createdAt: Time!
+  """
+  トークンID
+  """
+  tokenId: Uint
+  """
+  ブロックチェーンに保存された日付
+  """
+  saveToBcAt: Time
 }
 
 type CreateDiaryParams {

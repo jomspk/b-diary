@@ -85,6 +85,10 @@ type Diary struct {
 	Content string `json:"content"`
 	// 日記作成日時
 	CreatedAt time.Time `json:"createdAt"`
+	// トークンID
+	TokenID *uint `json:"tokenId,omitempty"`
+	// ブロックチェーンに保存された日付
+	SaveToBcAt *time.Time `json:"saveToBcAt,omitempty"`
 }
 
 type Mutation struct {

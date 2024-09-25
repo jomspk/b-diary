@@ -8,13 +8,12 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"lxcard/backend/graph/model"
+	"lxcard/backend/graph/types"
 	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"lxcard/backend/graph/model"
-	"lxcard/backend/graph/types"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -81,10 +80,12 @@ type ComplexityRoot struct {
 	}
 
 	Diary struct {
-		Content   func(childComplexity int) int
-		CreatedAt func(childComplexity int) int
-		ID        func(childComplexity int) int
-		Title     func(childComplexity int) int
+		Content    func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		SaveToBcAt func(childComplexity int) int
+		Title      func(childComplexity int) int
+		TokenID    func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -310,12 +311,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Diary.ID(childComplexity), true
 
+	case "Diary.saveToBcAt":
+		if e.complexity.Diary.SaveToBcAt == nil {
+			break
+		}
+
+		return e.complexity.Diary.SaveToBcAt(childComplexity), true
+
 	case "Diary.title":
 		if e.complexity.Diary.Title == nil {
 			break
 		}
 
 		return e.complexity.Diary.Title(childComplexity), true
+
+	case "Diary.tokenId":
+		if e.complexity.Diary.TokenID == nil {
+			break
+		}
+
+		return e.complexity.Diary.TokenID(childComplexity), true
 
 	case "Mutation.createCard":
 		if e.complexity.Mutation.CreateCard == nil {
@@ -1820,6 +1835,88 @@ func (ec *executionContext) fieldContext_Diary_createdAt(_ context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _Diary_tokenId(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_tokenId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TokenID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*uint)
+	fc.Result = res
+	return ec.marshalOUint2ᚖuint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_tokenId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Uint does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Diary_saveToBcAt(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_saveToBcAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SaveToBcAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Diary_saveToBcAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Diary",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createUser(ctx, field)
 	if err != nil {
@@ -2535,6 +2632,10 @@ func (ec *executionContext) fieldContext_Query_diaries(ctx context.Context, fiel
 				return ec.fieldContext_Diary_content(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Diary_createdAt(ctx, field)
+			case "tokenId":
+				return ec.fieldContext_Diary_tokenId(ctx, field)
+			case "saveToBcAt":
+				return ec.fieldContext_Diary_saveToBcAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Diary", field.Name)
 		},
@@ -5166,6 +5267,10 @@ func (ec *executionContext) _Diary(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "tokenId":
+			out.Values[i] = ec._Diary_tokenId(ctx, field, obj)
+		case "saveToBcAt":
+			out.Values[i] = ec._Diary_saveToBcAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6404,6 +6509,22 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	res := graphql.MarshalString(*v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalTime(*v)
 	return res
 }
 

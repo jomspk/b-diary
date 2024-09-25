@@ -32,7 +32,7 @@ func (r diary) List(ctx context.Context, db *gorm.DB, date time.Time, firebaseUi
 	}
 	firstOfMonth := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, loc)
 	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
-	if err := db.Table("create_diaries").Select("create_diaries.id as diary_id, create_diaries.title, create_diaries.content, create_diaries.created_at").Joins("INNER JOIN bdiary_users ON create_diaries.user_id = bdiary_users.id").Where("created_at >= ? AND created_at <= ?", firstOfMonth, lastOfMonth).Where("bdiary_users.firebase_uid = ?", firebaseUid).Scan(&diaries).Error; err != nil {
+	if err := db.Table("create_diaries").Select("create_diaries.*").Joins("INNER JOIN bdiary_users ON create_diaries.user_id = bdiary_users.id").Where("created_at >= ? AND created_at <= ?", firstOfMonth, lastOfMonth).Where("bdiary_users.firebase_uid = ?", firebaseUid).Find(&diaries).Error; err != nil {
 		return nil, errors.Wrap(err)
 	}
 	return diaries, nil
