@@ -414,6 +414,12 @@ export type GetDiariesQuery = {
   }>;
 };
 
+export type UpdateDiaryMutationVariables = Exact<{
+  input: UpdateDiaryInput;
+}>;
+
+export type UpdateDiaryMutation = { updateDiary: string };
+
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
@@ -1271,6 +1277,51 @@ export const GetDiariesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetDiariesQuery, GetDiariesQueryVariables>;
+export const UpdateDiaryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateDiary" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateDiaryInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateDiary" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateDiaryMutation, UpdateDiaryMutationVariables>;
 export const CreateUserDocument = {
   kind: "Document",
   definitions: [

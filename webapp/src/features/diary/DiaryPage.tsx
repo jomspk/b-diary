@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CustomCalendar from "@/features/diary/CustomCalendar";
 import { DiaryCreation } from "@/features/diary/DiaryCreation";
+import { UpdateDiary } from "@/features/diary/UpdateDiary";
 import ReadDiary from "@/features/diary/ReadDiary";
 import { gql } from "@/gql/__generated__";
 import { useSuspenseQuery } from "@apollo/client";
@@ -18,6 +19,8 @@ const Query = gql(/* GraphQL */ `
       title
       content
       createdAt
+      saveToBcAt
+      tokenId
     }
   }
 `);
@@ -37,7 +40,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     },
   });
 
-  const results = data.diaries.filter((diary) => {
+  const diary = data.diaries.find((diary) => {
     return new Date(diary.createdAt).toDateString() === date?.toDateString();
   });
 
@@ -99,8 +102,12 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
         </div>
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
-        {results.length > 0 ? (
-          <ReadDiary results={results} year={year} monthAndDay={monthAndDay} />
+        {diary ? (
+          diary.saveToBcAt ? (
+            <ReadDiary diary={diary} year={year} monthAndDay={monthAndDay} />
+          ) : (
+            <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} />
+          )
         ) : (
           <DiaryCreation year={year} monthAndDay={monthAndDay} />
         )}

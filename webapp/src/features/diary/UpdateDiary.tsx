@@ -1,5 +1,6 @@
 "use client";
 
+import { TimeString } from "@/gql/__generated__/graphql";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Date from "@/components/layout/Date";
@@ -10,27 +11,35 @@ import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Mutation = gql(/* GraphQL */ `
-  mutation CreateDiary($input: CreateUserDiaryInput!) {
-    createDiary(input: $input)
+  mutation UpdateDiary($input: UpdateDiaryInput!) {
+    updateDiary(input: $input)
   }
 `);
 
-type DiaryCreationProps = {
+type UpdateDiaryProps = {
   year: string | undefined;
   monthAndDay: string | undefined;
+  diary: {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: TimeString;
+    saveToBcAt: TimeString | null;
+    tokenId: number | null;
+  };
 };
 
-export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
+export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
   const [content, setContent] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [createDiary] = useMutation(Mutation);
+  const [updateDiary] = useMutation(Mutation);
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    setTitle(`${year}${monthAndDay}の日記`);
-    setContent("");
-  }, [year, monthAndDay]);
+    setTitle(diary.title);
+    setContent(diary.content);
+  }, [diary]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
@@ -48,10 +57,10 @@ export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
         throw new Error(
           "ユーザー情報を取得できません。再度ログインしてください。"
         );
-      await createDiary({
+      await updateDiary({
         variables: {
           input: {
-            firebaseUid: user.sub,
+            id: diary.id,
             content: content,
             title: title,
           },
@@ -94,7 +103,7 @@ export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
           className="bg-orange-500 w-3/12 hover:bg-orange-400"
           onClick={onSubmit}
         >
-          保存
+          更新
         </Button>
       </div>
     </>
