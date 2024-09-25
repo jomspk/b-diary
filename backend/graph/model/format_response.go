@@ -2,10 +2,11 @@ package model
 
 import (
 	"database/sql"
+	"time"
+
 	"lxcard/backend/db_model"
 	"lxcard/backend/pkg/errors"
 	"lxcard/backend/pkg/null"
-	"time"
 
 	"github.com/iancoleman/strcase"
 )
@@ -20,12 +21,12 @@ func FormatUserResponse(row *db_model.User) *User {
 func FormatDiaryResponse(row *db_model.Diaries) *Diary {
 
 	return &Diary{
-		ID:        row.ID,
-		Title:     row.Title,
-		Content:   row.Content,
-		CreatedAt: row.CreatedAt,
+		ID:         row.ID,
+		Title:      row.Title,
+		Content:    row.Content,
+		CreatedAt:  row.CreatedAt,
 		SaveToBcAt: convertNullTimeToTimePtr(row.SaveToBcAt),
-		TokenID:  null.FromSQLNullInt64ToUint(row.TokenID),
+		TokenID:    null.FromSQLNullInt64ToUint(row.TokenID),
 	}
 }
 func convertNullTimeToTimePtr(nullTime sql.NullTime) *time.Time {

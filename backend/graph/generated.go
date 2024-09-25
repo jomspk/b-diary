@@ -8,12 +8,13 @@ import (
 	"embed"
 	"errors"
 	"fmt"
-	"lxcard/backend/graph/model"
-	"lxcard/backend/graph/types"
 	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"lxcard/backend/graph/model"
+	"lxcard/backend/graph/types"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
