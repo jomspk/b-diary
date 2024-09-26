@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TimeString } from "@/gql/__generated__/graphql";
+import { DateString } from "@/gql/__generated__/graphql";
 
 type CustomCalendarProps = {
   date: Date | undefined;
@@ -11,7 +11,7 @@ type CustomCalendarProps = {
     id: string;
     title: string;
     content: string;
-    createdAt: TimeString;
+    diaryDate: DateString;
   }[];
 };
 
@@ -27,7 +27,7 @@ export default function CustomCalendar({
   }
   //   const highlightedDates = [new Date(2023, 5, 15), new Date(2023, 5, 20)]; // 例: 6月15日と20日
   const highlightedDates = monthEntries.map(
-    (entry) => new Date(entry.createdAt)
+    (entry) => new Date(entry.diaryDate)
   );
 
   const getDaysInMonth = (year: number, month: number) => {

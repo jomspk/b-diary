@@ -111,6 +111,8 @@ export type CreateCardInput = {
 export type CreateDiaryParams = {
   /** 日記内容 */
   content: Scalars["String"]["output"];
+  /** 日記の日付 */
+  diaryDate: Scalars["Date"]["output"];
   /** 日記のタイトル */
   title: Scalars["String"]["output"];
   /** ユーザーID */
@@ -120,6 +122,8 @@ export type CreateDiaryParams = {
 export type CreateUserDiaryInput = {
   /** 日記内容 */
   content: Scalars["String"]["input"];
+  /** 日記の日付 */
+  diaryDate: Scalars["Date"]["input"];
   /** 日記作成者のFirebase UID */
   firebaseUid: Scalars["String"]["input"];
   /** 日記のタイトル */
@@ -143,8 +147,8 @@ export type DiariesInput = {
 export type Diary = {
   /** 日記内容 */
   content: Scalars["String"]["output"];
-  /** 日記作成日時 */
-  createdAt: Scalars["Time"]["output"];
+  /** 日記の日時 */
+  diaryDate: Scalars["Date"]["output"];
   /** 日記ID */
   id: Scalars["ID"]["output"];
   /** ブロックチェーンに保存された日付 */
@@ -408,9 +412,9 @@ export type GetDiariesQuery = {
     id: string;
     title: string;
     content: string;
-    createdAt: TimeString;
     saveToBcAt: TimeString | null;
     tokenId: number | null;
+    diaryDate: DateString;
   }>;
 };
 
@@ -1266,9 +1270,9 @@ export const GetDiariesDocument = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "title" } },
                 { kind: "Field", name: { kind: "Name", value: "content" } },
-                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
                 { kind: "Field", name: { kind: "Name", value: "saveToBcAt" } },
                 { kind: "Field", name: { kind: "Name", value: "tokenId" } },
+                { kind: "Field", name: { kind: "Name", value: "diaryDate" } },
               ],
             },
           },

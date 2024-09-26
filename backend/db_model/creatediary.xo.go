@@ -4,6 +4,7 @@ package db_model
 
 import (
 	"database/sql"
+	"time"
 )
 
 // CreateDiary represents a row from 'lxcard.create_diaries'.
@@ -15,4 +16,5 @@ type CreateDiary struct {
 	TokenID         sql.NullInt64  `json:"token_id"`          // token_id
 	Content         string         `json:"content"`           // content
 	Title           string         `json:"title"`             // title
+	DiaryDate       time.Time      `json:"diary_date"`        // diary_date
 }

@@ -23,6 +23,7 @@ CREATE TABLE encryption_keys (
     FOREIGN KEY (user_id) REFERENCES bdiary_users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+-- save_to_bc_atはDATE型でいいかもしれない
 CREATE TABLE create_diaries (
     id             VARCHAR(26) NOT NULL COMMENT 'ID',
     created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
@@ -32,6 +33,7 @@ CREATE TABLE create_diaries (
     token_id            BIGINT DEFAULT NULL COMMENT 'NFTトークンID',
     content             VARCHAR(255) NOT NULL COMMENT '圧縮済み日記',
     title               VARCHAR(64) NOT NULL COMMENT '圧縮済みタイトル',
+    diary_date      DATE NOT NULL COMMENT '日記日付',
     PRIMARY KEY (id),
     UNIQUE KEY create_diary_token_id_unique (token_id),
     FOREIGN KEY (encryption_key_id) REFERENCES encryption_keys (id),
