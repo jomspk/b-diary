@@ -91,5 +91,3 @@ models:
   Uint32:
     model:
       - lxcard/backend/graph/types.Uint32
-  Card:
-    model: lxcard/backend/graph/model.Card

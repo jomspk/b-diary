@@ -10,8 +10,6 @@ require (
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/golangci/golangci-lint v1.59.1
 	github.com/google/go-cmp v0.6.0
-	github.com/google/uuid v1.6.0
-	github.com/iancoleman/strcase v0.3.0
 	github.com/joho/godotenv v1.5.1
 	github.com/justinas/alice v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -128,6 +126,7 @@ require (
 	github.com/google/flatbuffers v24.3.25+incompatible // indirect
 	github.com/google/go-intervals v0.0.2 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.5 // indirect
 	github.com/gordonklaus/ineffassign v0.1.0 // indirect
