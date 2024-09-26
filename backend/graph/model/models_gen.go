@@ -3,9 +3,6 @@
 package model
 
 import (
-	"fmt"
-	"io"
-	"strconv"
 	"time"
 )
 
@@ -21,27 +18,6 @@ type CreateBdiaryUserParams struct {
 	FirebaseUID string `json:"firebaseUid"`
 	// ユーザのウォレットアドレス
 	WalletAddress *string `json:"walletAddress,omitempty"`
-}
-
-type CreateCardInput struct {
-	// カード名
-	Name string `json:"name"`
-	// カード所有者
-	OwnerID string `json:"ownerId"`
-	// カード閲覧者IDの配列
-	ViewerIds []string `json:"viewerIds,omitempty"`
-	// カード説明
-	Description string `json:"description"`
-	// 1回あたりの利用上限金額
-	OnceMaxAmount *uint32 `json:"onceMaxAmount,omitempty"`
-	// 月ごとの利用上限金額
-	MonthlyMaxAmount *uint32 `json:"monthlyMaxAmount,omitempty"`
-	// 累計の利用上限金額
-	TotalMaxAmount *uint `json:"totalMaxAmount,omitempty"`
-	// カード利用開始日
-	StartDate *string `json:"startDate,omitempty"`
-	// カード利用終了日
-	EndDate *string `json:"endDate,omitempty"`
 }
 
 type CreateDiaryParams struct {
@@ -101,27 +77,6 @@ type Mutation struct {
 type Query struct {
 }
 
-type UpdateCardInput struct {
-	// カード名
-	Name string `json:"name"`
-	// カード所有者
-	OwnerID string `json:"ownerId"`
-	// カード閲覧者IDの配列
-	ViewerIds []string `json:"viewerIds,omitempty"`
-	// カード説明
-	Description string `json:"description"`
-	// 1回あたりの利用上限金額
-	OnceMaxAmount *uint32 `json:"onceMaxAmount,omitempty"`
-	// 月ごとの利用上限金額
-	MonthlyMaxAmount *uint32 `json:"monthlyMaxAmount,omitempty"`
-	// 累計の利用上限金額
-	TotalMaxAmount *uint `json:"totalMaxAmount,omitempty"`
-	// カード利用開始日
-	StartDate *string `json:"startDate,omitempty"`
-	// カード利用終了日
-	EndDate *string `json:"endDate,omitempty"`
-}
-
 type UpdateDiaryInput struct {
 	// 日記ID
 	ID string `json:"id"`
@@ -136,47 +91,4 @@ type User struct {
 	ID string `json:"id"`
 	// ユーザ名
 	Name string `json:"name"`
-}
-
-type CardState string
-
-const (
-	// 有効
-	CardStateActive CardState = "ACTIVE"
-	// 一時停止
-	CardStateLocked CardState = "LOCKED"
-)
-
-var AllCardState = []CardState{
-	CardStateActive,
-	CardStateLocked,
-}
-
-func (e CardState) IsValid() bool {
-	switch e {
-	case CardStateActive, CardStateLocked:
-		return true
-	}
-	return false
-}
-
-func (e CardState) String() string {
-	return string(e)
-}
-
-func (e *CardState) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = CardState(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid CardState", str)
-	}
-	return nil
-}
-
-func (e CardState) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
 }

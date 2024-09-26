@@ -50,15 +50,11 @@ func realMain() error {
 		return errors.Wrap(err)
 	}
 
-	cardRepo := repository.NewCard()
-	userRepo := repository.NewUser()
 	diaryRepo := repository.NewDiary()
 	bdiaryUserRepo := repository.NewBDiaryUser()
-	cardSvc := service.NewCard(db, cardRepo)
-	userSvc := service.NewUser(db, userRepo)
 	diarySvc := service.NewDiary(db, diaryRepo)
 	bdiaryUserRepoSvc := service.NewBDiaryUser(db, bdiaryUserRepo)
-	config := graph.Config{Resolvers: graph.NewResolver(cardSvc, userSvc, diarySvc, bdiaryUserRepoSvc)}
+	config := graph.Config{Resolvers: graph.NewResolver(diarySvc, bdiaryUserRepoSvc)}
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(config))
 	srv.AroundResponses(mid.ResponseErrorRequestIDMiddleware)
 
@@ -66,7 +62,7 @@ func realMain() error {
 		http.Handle("/", playground.Handler("GraphQL playground", "/v1/graphql"))
 	}
 	// GraphQL Endpoint
-	http.Handle("/v1/graphql", setupGlobalMiddleware(srv, userSvc, cardSvc))
+	http.Handle("/v1/graphql", setupGlobalMiddleware(srv))
 
 	addr := fmt.Sprintf("%s:%s", env.Get().Server.APIHost, env.Get().Server.APIPort)
 	app.Logger.Info().Msgf("Serving lxcard on http://%s", addr)
@@ -105,12 +101,11 @@ func realMain() error {
 	return nil
 }
 
-func setupGlobalMiddleware(handler http.Handler, userSvc service.User, cardSvc service.Card) http.Handler {
+func setupGlobalMiddleware(handler http.Handler) http.Handler {
 	a := alice.New()
 	a = a.Append(mid.Recover)
 	a = a.Append(mid.WithContext)
 	a = a.Append(mid.CORS().Handler)
-	a = a.Append(mid.LoaderMiddleware(userSvc, cardSvc))
 	a = a.Append(mid.RequestLog)
 	return a.Then(handler)
 }
