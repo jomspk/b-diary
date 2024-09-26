@@ -1,6 +1,6 @@
 "use client";
 
-import { TimeString } from "@/gql/__generated__/graphql";
+import { DateString, TimeString } from "@/gql/__generated__/graphql";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Date from "@/components/layout/Date";
@@ -23,7 +23,7 @@ type UpdateDiaryProps = {
     id: string;
     title: string;
     content: string;
-    createdAt: TimeString;
+    diaryDate: DateString;
     saveToBcAt: TimeString | null;
     tokenId: number | null;
   };
@@ -66,10 +66,10 @@ export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
           },
         },
       });
-      toast({ title: "日記の作成に成功しました" });
+      toast({ title: "日記の更新に成功しました" });
     } catch (e) {
       console.error(e);
-      toast({ title: "日記の作成に失敗しました", variant: "destructive" });
+      toast({ title: "日記の更新に失敗しました", variant: "destructive" });
     }
   };
 

@@ -80,9 +80,10 @@ func (r *mutationResolver) CreateDiary(ctx context.Context, input model.CreateUs
 		userId = existUser.ID
 	}
 	diary, err := r.DiarySvc.Create(ctx, model.CreateDiaryParams{
-		Title:   input.Title,
-		Content: input.Content,
-		UserID:  userId,
+		Title:     input.Title,
+		Content:   input.Content,
+		UserID:    userId,
+		DiaryDate: input.DiaryDate,
 	})
 	if err != nil {
 		return "", err

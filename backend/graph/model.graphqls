@@ -17,9 +17,9 @@ type Diary {
   """
   content: String!
   """
-  日記作成日時
+  日記の日時
   """
-  createdAt: Time!
+  diaryDate: Date!
   """
   トークンID
   """
@@ -43,6 +43,10 @@ type CreateDiaryParams {
   ユーザーID
   """
   userId: ID!
+  """
+  日記の日付
+  """
+  diaryDate: Date!
 }
 
 type CreateBdiaryUserParams {

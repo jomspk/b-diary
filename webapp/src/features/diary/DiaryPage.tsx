@@ -18,9 +18,9 @@ const Query = gql(/* GraphQL */ `
       id
       title
       content
-      createdAt
       saveToBcAt
       tokenId
+      diaryDate
     }
   }
 `);
@@ -44,7 +44,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   });
 
   const diary = data.diaries.find((diary) => {
-    return new Date(diary.createdAt).toDateString() === date?.toDateString();
+    return new Date(diary.diaryDate).toDateString() === date?.toDateString();
   });
 
   useEffect(() => {
@@ -53,7 +53,6 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     });
   }, [formattedDate, firebaseUid, refetch]);
 
-  console.log("data.diary", data.diaries);
   // 過去の日記データのモックアップ（実際のアプリケーションではデータベースから取得します）
   const pastEntries = [
     {
@@ -119,7 +118,11 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
             <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} />
           )
         ) : (
-          <DiaryCreation year={year} monthAndDay={monthAndDay} />
+          <DiaryCreation
+            year={year}
+            monthAndDay={monthAndDay}
+            formattedDate={formattedDate}
+          />
         )}
       </div>
     </div>

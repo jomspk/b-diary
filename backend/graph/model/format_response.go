@@ -18,13 +18,13 @@ func FormatUserResponse(row *db_model.User) *User {
 	}
 }
 
-func FormatDiaryResponse(row *db_model.Diaries) *Diary {
+func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
 
 	return &Diary{
 		ID:         row.ID,
 		Title:      row.Title,
 		Content:    row.Content,
-		CreatedAt:  row.CreatedAt,
+		DiaryDate:  row.DiaryDate.Format(time.RFC3339),
 		SaveToBcAt: convertNullTimeToTimePtr(row.SaveToBcAt),
 		TokenID:    null.FromSQLNullInt64ToUint(row.TokenID),
 	}

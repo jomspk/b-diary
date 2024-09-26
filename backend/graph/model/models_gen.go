@@ -51,6 +51,8 @@ type CreateDiaryParams struct {
 	Title string `json:"title"`
 	// ユーザーID
 	UserID string `json:"userId"`
+	// 日記の日付
+	DiaryDate string `json:"diaryDate"`
 }
 
 type CreateUserDiaryInput struct {
@@ -62,6 +64,8 @@ type CreateUserDiaryInput struct {
 	FirebaseUID string `json:"firebaseUid"`
 	// 日記作成者のウォレットアドレス
 	WalletAddress *string `json:"walletAddress,omitempty"`
+	// 日記の日付
+	DiaryDate string `json:"diaryDate"`
 }
 
 type CreateUserInput struct {
@@ -83,8 +87,8 @@ type Diary struct {
 	Title string `json:"title"`
 	// 日記内容
 	Content string `json:"content"`
-	// 日記作成日時
-	CreatedAt time.Time `json:"createdAt"`
+	// 日記の日時
+	DiaryDate string `json:"diaryDate"`
 	// トークンID
 	TokenID *uint `json:"tokenId,omitempty"`
 	// ブロックチェーンに保存された日付

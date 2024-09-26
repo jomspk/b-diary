@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { DateString } from "@/gql/__generated__/graphql";
 
 const Mutation = gql(/* GraphQL */ `
   mutation CreateDiary($input: CreateUserDiaryInput!) {
@@ -18,9 +19,14 @@ const Mutation = gql(/* GraphQL */ `
 type DiaryCreationProps = {
   year: string | undefined;
   monthAndDay: string | undefined;
+  formattedDate: string;
 };
 
-export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
+export function DiaryCreation({
+  year,
+  monthAndDay,
+  formattedDate,
+}: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [createDiary] = useMutation(Mutation);
@@ -54,6 +60,7 @@ export function DiaryCreation({ year, monthAndDay }: DiaryCreationProps) {
             firebaseUid: user.sub,
             content: content,
             title: title,
+            diaryDate: formattedDate.split("T")[0] as DateString,
           },
         },
       });

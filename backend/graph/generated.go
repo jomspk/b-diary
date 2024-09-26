@@ -75,14 +75,15 @@ type ComplexityRoot struct {
 	}
 
 	CreateDiaryParams struct {
-		Content func(childComplexity int) int
-		Title   func(childComplexity int) int
-		UserID  func(childComplexity int) int
+		Content   func(childComplexity int) int
+		DiaryDate func(childComplexity int) int
+		Title     func(childComplexity int) int
+		UserID    func(childComplexity int) int
 	}
 
 	Diary struct {
 		Content    func(childComplexity int) int
-		CreatedAt  func(childComplexity int) int
+		DiaryDate  func(childComplexity int) int
 		ID         func(childComplexity int) int
 		SaveToBcAt func(childComplexity int) int
 		Title      func(childComplexity int) int
@@ -277,6 +278,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateDiaryParams.Content(childComplexity), true
 
+	case "CreateDiaryParams.diaryDate":
+		if e.complexity.CreateDiaryParams.DiaryDate == nil {
+			break
+		}
+
+		return e.complexity.CreateDiaryParams.DiaryDate(childComplexity), true
+
 	case "CreateDiaryParams.title":
 		if e.complexity.CreateDiaryParams.Title == nil {
 			break
@@ -298,12 +306,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Diary.Content(childComplexity), true
 
-	case "Diary.createdAt":
-		if e.complexity.Diary.CreatedAt == nil {
+	case "Diary.diaryDate":
+		if e.complexity.Diary.DiaryDate == nil {
 			break
 		}
 
-		return e.complexity.Diary.CreatedAt(childComplexity), true
+		return e.complexity.Diary.DiaryDate(childComplexity), true
 
 	case "Diary.id":
 		if e.complexity.Diary.ID == nil {
@@ -1660,6 +1668,50 @@ func (ec *executionContext) fieldContext_CreateDiaryParams_userId(_ context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _CreateDiaryParams_diaryDate(ctx context.Context, field graphql.CollectedField, obj *model.CreateDiaryParams) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateDiaryParams_diaryDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DiaryDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDate2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateDiaryParams_diaryDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateDiaryParams",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Date does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Diary_id(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Diary_id(ctx, field)
 	if err != nil {
@@ -1792,8 +1844,8 @@ func (ec *executionContext) fieldContext_Diary_content(_ context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Diary_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Diary_createdAt(ctx, field)
+func (ec *executionContext) _Diary_diaryDate(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_diaryDate(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1806,7 +1858,7 @@ func (ec *executionContext) _Diary_createdAt(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
+		return obj.DiaryDate, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1818,19 +1870,19 @@ func (ec *executionContext) _Diary_createdAt(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNDate2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Diary_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Diary_diaryDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Diary",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type Date does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2631,8 +2683,8 @@ func (ec *executionContext) fieldContext_Query_diaries(ctx context.Context, fiel
 				return ec.fieldContext_Diary_title(ctx, field)
 			case "content":
 				return ec.fieldContext_Diary_content(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Diary_createdAt(ctx, field)
+			case "diaryDate":
+				return ec.fieldContext_Diary_diaryDate(ctx, field)
 			case "tokenId":
 				return ec.fieldContext_Diary_tokenId(ctx, field)
 			case "saveToBcAt":
@@ -4769,7 +4821,7 @@ func (ec *executionContext) unmarshalInputCreateUserDiaryInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"content", "title", "firebaseUid", "walletAddress"}
+	fieldsInOrder := [...]string{"content", "title", "firebaseUid", "walletAddress", "diaryDate"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4804,6 +4856,13 @@ func (ec *executionContext) unmarshalInputCreateUserDiaryInput(ctx context.Conte
 				return it, err
 			}
 			it.WalletAddress = data
+		case "diaryDate":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("diaryDate"))
+			data, err := ec.unmarshalNDate2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DiaryDate = data
 		}
 	}
 
@@ -5214,6 +5273,11 @@ func (ec *executionContext) _CreateDiaryParams(ctx context.Context, sel ast.Sele
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "diaryDate":
+			out.Values[i] = ec._CreateDiaryParams_diaryDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5263,8 +5327,8 @@ func (ec *executionContext) _Diary(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "createdAt":
-			out.Values[i] = ec._Diary_createdAt(ctx, field, obj)
+		case "diaryDate":
+			out.Values[i] = ec._Diary_diaryDate(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -5990,6 +6054,21 @@ func (ec *executionContext) unmarshalNCreateUserDiaryInput2lxcardᚋbackendᚋgr
 func (ec *executionContext) unmarshalNCreateUserInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDate2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNDiariesInput2lxcardᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx context.Context, v interface{}) (model.DiariesInput, error) {

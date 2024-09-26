@@ -1,4 +1,4 @@
-import { TimeString } from "@/gql/__generated__/graphql";
+import { DateString, TimeString } from "@/gql/__generated__/graphql";
 import Date from "@/components/layout/Date";
 
 type ReadDiaryProps = {
@@ -6,7 +6,7 @@ type ReadDiaryProps = {
     id: string;
     title: string;
     content: string;
-    createdAt: TimeString;
+    diaryDate: DateString;
     saveToBcAt: TimeString | null;
     tokenId: number | null;
   };
