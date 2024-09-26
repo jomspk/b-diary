@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomCalendar from "@/features/diary/CustomCalendar";
 import { DiaryCreation } from "@/features/diary/DiaryCreation";
 import { UpdateDiary } from "@/features/diary/UpdateDiary";
@@ -27,14 +27,17 @@ const Query = gql(/* GraphQL */ `
 
 export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const formattedDate = date ? date.toISOString() : "";
+  const formattedDate = date
+    ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString()
+    : "";
   const firebaseUid = user && user.sub ? user.sub : "";
   const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
   const monthAndDay = date?.toLocaleDateString("ja-JP", {
     month: "long",
     day: "numeric",
   });
-  const { data } = useSuspenseQuery(Query, {
+
+  const { data, refetch } = useSuspenseQuery(Query, {
     variables: {
       input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
     },
@@ -44,6 +47,13 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     return new Date(diary.createdAt).toDateString() === date?.toDateString();
   });
 
+  useEffect(() => {
+    refetch({
+      input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
+    });
+  }, [formattedDate, firebaseUid, refetch]);
+
+  console.log("data.diary", data.diaries);
   // 過去の日記データのモックアップ（実際のアプリケーションではデータベースから取得します）
   const pastEntries = [
     {
