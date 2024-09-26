@@ -85,10 +85,3 @@ type UpdateDiaryInput struct {
 	// 日記のタイトル
 	Title string `json:"title"`
 }
-
-type User struct {
-	// ユーザID
-	ID string `json:"id"`
-	// ユーザ名
-	Name string `json:"name"`
-}

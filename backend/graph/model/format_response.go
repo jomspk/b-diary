@@ -8,13 +8,6 @@ import (
 	"lxcard/backend/pkg/null"
 )
 
-func FormatUserResponse(row *db_model.User) *User {
-	return &User{
-		ID:   row.ID,
-		Name: row.Name,
-	}
-}
-
 func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
 
 	return &Diary{

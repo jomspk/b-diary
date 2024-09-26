@@ -59,14 +59,3 @@ type CreateBdiaryUserParams {
   """
   walletAddress: String
 }
-
-type User {
-  """
-  ユーザID
-  """
-  id: ID!
-  """
-  ユーザ名
-  """
-  name: String!
-}
