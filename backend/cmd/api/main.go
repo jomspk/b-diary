@@ -25,6 +25,7 @@ import (
 	gormpkg "lxcard/backend/pkg/gorm"
 	"lxcard/backend/repository"
 	"lxcard/backend/service"
+	"lxcard/backend/vwbl/api"
 )
 
 func main() {
@@ -107,10 +108,11 @@ func realMain() error {
 
 func startCronJob(db *gorm.DB) {
 	c := cron.New()
+	vwblAPI := api.NewVWBLApi(env.Get().VWBL.EndpointURL)
 	cronJobRepo := repository.NewCronJob()
 	cronJobSvc := service.NewCronJob(db, cronJobRepo)
 	_, err := c.AddFunc("@every 1m", func() {
-		_, err := cronJobSvc.Test()
+		_, err := cronJobSvc.Test(vwblAPI)
 		if err != nil {
 			app.Logger.Error().Err(err).Msg("Failed to run cron job")
 		}

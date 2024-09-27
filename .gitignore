@@ -26,6 +26,7 @@ bin/
 
 # environment
 .env.local
+.env
 
 .idea/
 

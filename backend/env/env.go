@@ -23,6 +23,9 @@ type Env struct {
 		APIHost    string   `envconfig:"SERVER_API_HOST" default:"127.0.0.1"`
 		APIPort    string   `envconfig:"SERVER_API_PORT" default:"8080"`
 	}
+	VWBL struct {
+		EndpointURL string `envconfig:"VWBL_ENDPOINT_URL" default:"https://dev.vwbl.network"`
+	}
 }
 
 const (
