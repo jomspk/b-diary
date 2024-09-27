@@ -14,6 +14,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/justinas/alice"
+	"github.com/robfig/cron/v3"
 	"gorm.io/gorm"
 
 	app "lxcard/backend"
@@ -49,6 +50,9 @@ func realMain() error {
 	if err != nil {
 		return errors.Wrap(err)
 	}
+
+	// 定期処理
+	startCronJob(db)
 
 	diaryRepo := repository.NewDiary()
 	bdiaryUserRepo := repository.NewBDiaryUser()
@@ -99,6 +103,25 @@ func realMain() error {
 	app.Logger.Info().Msg("server has successfully completed graceful shutdown")
 
 	return nil
+}
+
+func startCronJob(db *gorm.DB) {
+	c := cron.New()
+	cronJobRepo := repository.NewCronJob()
+	cronJobSvc := service.NewCronJob(db, cronJobRepo)
+	_, err := c.AddFunc("@every 1m", func() {
+		_, err := cronJobSvc.Test()
+		if err != nil {
+			app.Logger.Error().Err(err).Msg("Failed to run cron job")
+		}
+		app.Logger.Info().Msg("CronJob is running")
+	})
+	if err != nil {
+		app.Logger.Error().Err(err).Msg("Failed to add cron job")
+	}
+	c.Start()
+
+	app.Logger.Info().Msg("CronJob started")
 }
 
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
