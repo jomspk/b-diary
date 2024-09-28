@@ -25,6 +25,7 @@ import (
 	gormpkg "lxcard/backend/pkg/gorm"
 	"lxcard/backend/repository"
 	"lxcard/backend/service"
+	"lxcard/backend/vwbl"
 	"lxcard/backend/vwbl/api"
 )
 
@@ -105,10 +106,30 @@ func realMain() error {
 
 	return nil
 }
-
+type VWBLProps struct {
+	ContractAddress string
+	ProviderURL     string
+	PrivateKey      string
+	ChainID         string
+	UserAddress     string
+	VwblNetworkURL  string
+}
 func startCronJob(db *gorm.DB) {
 	c := cron.New()
 	vwblAPI := api.NewVWBLApi(env.Get().VWBL.EndpointURL)
+	vwblProps := vwbl.VWBLProps{
+		ContractAddress: env.Get().VWBL.ContractAddress,
+		ProviderURL:     env.Get().VWBL.ProviderURL,
+		PrivateKey:      env.Get().VWBL.PrivateKey,
+		ChainID:         env.Get().VWBL.ChainID,
+		UserAddress:     env.Get().VWBL.UserAddress,
+		VwblNetworkURL:  env.Get().VWBL.VwblNetworkURL,
+	}
+	vwbl, vwblErr := vwbl.NewVWBL(vwblProps)
+	fmt.Println(vwbl)
+	if vwblErr != nil {
+		app.Logger.Error().Err(vwblErr).Msg("Failed to create VWBL")
+	}
 	cronJobRepo := repository.NewCronJob()
 	cronJobSvc := service.NewCronJob(db, cronJobRepo)
 	_, err := c.AddFunc("@every 1m", func() {

@@ -25,6 +25,12 @@ type Env struct {
 	}
 	VWBL struct {
 		EndpointURL string `envconfig:"VWBL_ENDPOINT_URL" default:"https://dev.vwbl.network"`
+		ContractAddress string `envconfig:"VWBL_CONTRACT_ADDRESS" default:"0x7996fb726E3BAA4823B7508b6C93F73B7Bc051cf"`
+		ProviderURL string `envconfig:"VWBL_PROVIDER_URL" default:"https://rpc.testnet.vwbl.network"`
+		PrivateKey string `envconfig:"VWBL_PRIVATE_KEY" default:""`
+		ChainID string `envconfig:"VWBL_CHAIN_ID" default:"80002"`
+		UserAddress string `envconfig:"VWBL_USER_ADDRESS" default:"0x113c4064Fdf3710Ec38CC9B709852c56be1d1803"`
+		VwblNetworkURL string `envconfig:"VWBL_NETWORK_URL" default:"https://dev.vwbl.network"`
 	}
 }
 
