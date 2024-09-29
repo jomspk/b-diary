@@ -28,6 +28,10 @@ type Diary {
   暗号化キー
   """
   encryptionKey: String
+  """
+  ブロックチェーンに保存された日付
+  """
+  saveToBcAt: Time
 }
 
 type CreateDiaryParams {

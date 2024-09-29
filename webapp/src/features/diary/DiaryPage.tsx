@@ -21,6 +21,7 @@ const Query = gql(/* GraphQL */ `
       tokenId
       diaryDate
       encryptionKey
+      saveToBcAt
     }
   }
 `);

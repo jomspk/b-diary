@@ -94,6 +94,8 @@ export type Diary = {
   encryptionKey: Maybe<Scalars["String"]["output"]>;
   /** 日記ID */
   id: Scalars["ID"]["output"];
+  /** ブロックチェーンに保存された日付 */
+  saveToBcAt: Maybe<Scalars["Time"]["output"]>;
   /** 日記タイトル */
   title: Scalars["String"]["output"];
   /** トークンID */
@@ -151,6 +153,7 @@ export type GetDiariesQuery = {
     tokenId: number | null;
     diaryDate: DateString;
     encryptionKey: string | null;
+    saveToBcAt: TimeString | null;
   }>;
 };
 
@@ -256,6 +259,7 @@ export const GetDiariesDocument = {
                   kind: "Field",
                   name: { kind: "Name", value: "encryptionKey" },
                 },
+                { kind: "Field", name: { kind: "Name", value: "saveToBcAt" } },
               ],
             },
           },

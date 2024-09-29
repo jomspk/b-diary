@@ -69,6 +69,8 @@ type Diary struct {
 	TokenID *uint `json:"tokenId,omitempty"`
 	// 暗号化キー
 	EncryptionKey *string `json:"encryptionKey,omitempty"`
+	// ブロックチェーンに保存された日付
+	SaveToBcAt *time.Time `json:"saveToBcAt,omitempty"`
 }
 
 type Mutation struct {
