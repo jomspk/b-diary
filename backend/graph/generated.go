@@ -63,12 +63,12 @@ type ComplexityRoot struct {
 	}
 
 	Diary struct {
-		Content    func(childComplexity int) int
-		DiaryDate  func(childComplexity int) int
-		ID         func(childComplexity int) int
-		SaveToBcAt func(childComplexity int) int
-		Title      func(childComplexity int) int
-		TokenID    func(childComplexity int) int
+		Content       func(childComplexity int) int
+		DiaryDate     func(childComplexity int) int
+		EncryptionKey func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Title         func(childComplexity int) int
+		TokenID       func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -164,19 +164,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Diary.DiaryDate(childComplexity), true
 
+	case "Diary.encryptionKey":
+		if e.complexity.Diary.EncryptionKey == nil {
+			break
+		}
+
+		return e.complexity.Diary.EncryptionKey(childComplexity), true
+
 	case "Diary.id":
 		if e.complexity.Diary.ID == nil {
 			break
 		}
 
 		return e.complexity.Diary.ID(childComplexity), true
-
-	case "Diary.saveToBcAt":
-		if e.complexity.Diary.SaveToBcAt == nil {
-			break
-		}
-
-		return e.complexity.Diary.SaveToBcAt(childComplexity), true
 
 	case "Diary.title":
 		if e.complexity.Diary.Title == nil {
@@ -934,8 +934,8 @@ func (ec *executionContext) fieldContext_Diary_tokenId(_ context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Diary_saveToBcAt(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Diary_saveToBcAt(ctx, field)
+func (ec *executionContext) _Diary_encryptionKey(ctx context.Context, field graphql.CollectedField, obj *model.Diary) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Diary_encryptionKey(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -948,7 +948,7 @@ func (ec *executionContext) _Diary_saveToBcAt(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SaveToBcAt, nil
+		return obj.EncryptionKey, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -957,19 +957,19 @@ func (ec *executionContext) _Diary_saveToBcAt(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*time.Time)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Diary_saveToBcAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Diary_encryptionKey(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Diary",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1134,8 +1134,8 @@ func (ec *executionContext) fieldContext_Query_diaries(ctx context.Context, fiel
 				return ec.fieldContext_Diary_diaryDate(ctx, field)
 			case "tokenId":
 				return ec.fieldContext_Diary_tokenId(ctx, field)
-			case "saveToBcAt":
-				return ec.fieldContext_Diary_saveToBcAt(ctx, field)
+			case "encryptionKey":
+				return ec.fieldContext_Diary_encryptionKey(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Diary", field.Name)
 		},
@@ -3383,8 +3383,8 @@ func (ec *executionContext) _Diary(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "tokenId":
 			out.Values[i] = ec._Diary_tokenId(ctx, field, obj)
-		case "saveToBcAt":
-			out.Values[i] = ec._Diary_saveToBcAt(ctx, field, obj)
+		case "encryptionKey":
+			out.Values[i] = ec._Diary_encryptionKey(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4298,22 +4298,6 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	res := graphql.MarshalString(*v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalTime(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalTime(*v)
 	return res
 }
 

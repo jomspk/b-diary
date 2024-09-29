@@ -25,9 +25,9 @@ type Diary {
   """
   tokenId: Uint
   """
-  ブロックチェーンに保存された日付
+  暗号化キー
   """
-  saveToBcAt: Time
+  encryptionKey: String
 }
 
 type CreateDiaryParams {

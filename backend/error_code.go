@@ -72,6 +72,5 @@ var (
 	/*
 		NotFound
 	*/
-	ErrUserNotFound = NewError(1001, http.StatusNotFound, "ユーザーが見つかりません")
-	ErrCardNotFound = NewError(1002, http.StatusNotFound, "カードが見つかりません")
+	ErrDiaryNotFound = NewError(1002, http.StatusNotFound, "日記が見つかりません")
 )
