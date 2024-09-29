@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"time"
 
 	"lxcard/backend/db_model"
@@ -16,5 +17,13 @@ func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
 		DiaryDate:     row.DiaryDate.Format(time.RFC3339),
 		TokenID:       null.FromSQLNullInt64ToUint(row.TokenID),
 		EncryptionKey: null.FromSQLNullString(row.EncryptionKey),
+		SaveToBcAt:    convertNullTimeToTimePtr(row.SaveToBcAt),
 	}
+}
+
+func convertNullTimeToTimePtr(nullTime sql.NullTime) *time.Time {
+	if nullTime.Valid {
+		return &nullTime.Time
+	}
+	return nil
 }
