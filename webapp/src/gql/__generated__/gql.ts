@@ -15,7 +15,7 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
 const documents = {
   "\n  mutation CreateDiary($input: CreateUserDiaryInput!) {\n    createDiary(input: $input)\n  }\n":
     types.CreateDiaryDocument,
-  "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      saveToBcAt\n      tokenId\n      diaryDate\n    }\n  }\n":
+  "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n    }\n  }\n":
     types.GetDiariesDocument,
   "\n  mutation UpdateDiary($input: UpdateDiaryInput!) {\n    updateDiary(input: $input)\n  }\n":
     types.UpdateDiaryDocument,
@@ -45,8 +45,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      saveToBcAt\n      tokenId\n      diaryDate\n    }\n  }\n"
-): (typeof documents)["\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      saveToBcAt\n      tokenId\n      diaryDate\n    }\n  }\n"];
+  source: "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n    }\n  }\n"
+): (typeof documents)["\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

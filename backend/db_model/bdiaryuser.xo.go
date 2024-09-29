@@ -12,5 +12,4 @@ type BdiaryUser struct {
 	ID            string         `json:"id"`             // id
 	WalletAddress sql.NullString `json:"wallet_address"` // wallet_address
 	FirebaseUID   string         `json:"firebase_uid"`   // firebase_uid
-	HasDiary      bool           `json:"has_diary"`      // has_diary
 }

@@ -9,12 +9,12 @@ import (
 
 // CreateDiary represents a row from 'lxcard.create_diaries'.
 type CreateDiary struct {
-	ID              string         `json:"id"`                // id
-	EncryptionKeyID sql.NullString `json:"encryption_key_id"` // encryption_key_id
-	UserID          string         `json:"user_id"`           // user_id
-	SaveToBcAt      sql.NullTime   `json:"save_to_bc_at"`     // save_to_bc_at
-	TokenID         sql.NullInt64  `json:"token_id"`          // token_id
-	Content         string         `json:"content"`           // content
-	Title           string         `json:"title"`             // title
-	DiaryDate       time.Time      `json:"diary_date"`        // diary_date
+	ID            string         `json:"id"`             // id
+	UserID        string         `json:"user_id"`        // user_id
+	SaveToBcAt    sql.NullTime   `json:"save_to_bc_at"`  // save_to_bc_at
+	TokenID       sql.NullInt64  `json:"token_id"`       // token_id
+	EncryptionKey sql.NullString `json:"encryption_key"` // encryption_key
+	Content       string         `json:"content"`        // content
+	Title         string         `json:"title"`          // title
+	DiaryDate     time.Time      `json:"diary_date"`     // diary_date
 }
