@@ -9,10 +9,7 @@ const Query = gql(/* GraphQL */ `
       id
       title
       content
-      tokenId
       diaryDate
-      encryptionKey
-      saveToBcAt
     }
   }
 `);

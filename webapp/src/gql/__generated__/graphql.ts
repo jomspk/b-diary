@@ -156,10 +156,7 @@ export type GetDiaryHistoryQuery = {
     id: string;
     title: string;
     content: string;
-    tokenId: number | null;
     diaryDate: DateString;
-    encryptionKey: string | null;
-    saveToBcAt: TimeString | null;
   }>;
 };
 
@@ -275,13 +272,7 @@ export const GetDiaryHistoryDocument = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "title" } },
                 { kind: "Field", name: { kind: "Name", value: "content" } },
-                { kind: "Field", name: { kind: "Name", value: "tokenId" } },
                 { kind: "Field", name: { kind: "Name", value: "diaryDate" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "encryptionKey" },
-                },
-                { kind: "Field", name: { kind: "Name", value: "saveToBcAt" } },
               ],
             },
           },

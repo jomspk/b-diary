@@ -15,7 +15,7 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
 const documents = {
   "\n  mutation CreateDiary($input: CreateUserDiaryInput!) {\n    createDiary(input: $input)\n  }\n":
     types.CreateDiaryDocument,
-  "\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n      saveToBcAt\n    }\n  }\n":
+  "\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      diaryDate\n    }\n  }\n":
     types.GetDiaryHistoryDocument,
   "\n  query GetDiaries($input: DiariesInput!) {\n    diaries(input: $input) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n      saveToBcAt\n    }\n  }\n":
     types.GetDiariesDocument,
@@ -47,8 +47,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: "\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n      saveToBcAt\n    }\n  }\n"
-): (typeof documents)["\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      tokenId\n      diaryDate\n      encryptionKey\n      saveToBcAt\n    }\n  }\n"];
+  source: "\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      diaryDate\n    }\n  }\n"
+): (typeof documents)["\n  query getDiaryHistory($firebaseUid: String!) {\n    diaryHistory(firebaseUid: $firebaseUid) {\n      id\n      title\n      content\n      diaryDate\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

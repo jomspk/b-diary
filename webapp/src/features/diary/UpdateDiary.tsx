@@ -31,20 +31,20 @@ type UpdateDiaryProps = {
 
 export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
   const [content, setContent] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
+  // const [title, setTitle] = useState<string>("");
   const [updateDiary] = useMutation(Mutation);
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    setTitle(diary.title);
+    // setTitle(diary.title);
     setContent(diary.content);
   }, [diary]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
-  const titleMaxLength = 50;
+  // const titleMaxLength = 50;
   const contentMaxLength = 500;
 
   const onSubmit = async () => {
@@ -62,7 +62,7 @@ export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
           input: {
             id: diary.id,
             content: content,
-            title: title,
+            title: "",
           },
         },
       });
@@ -77,7 +77,7 @@ export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
     <>
       <div className="p-10 flex flex-col space-y-4 flex-grow">
         <Date year={year} monthAndDay={monthAndDay} />
-        <Textarea
+        {/* <Textarea
           placeholder="タイトルを書いてください..."
           className="resize-none"
           maxLength={titleMaxLength}
@@ -86,7 +86,7 @@ export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
         />
         <p>
           {title.length} / {titleMaxLength} 文字
-        </p>
+        </p> */}
         <Textarea
           placeholder="今日の出来事を書いてください..."
           className="flex-grow resize-none"

@@ -22,26 +22,26 @@ type DiaryCreationProps = {
   formattedDate: string;
 };
 
-export function DiaryCreation({
+export default function DiaryCreation({
   year,
   monthAndDay,
   formattedDate,
 }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
+  // const [title, setTitle] = useState<string>("");
   const [createDiary] = useMutation(Mutation);
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    setTitle(`${year}${monthAndDay}の日記`);
+    // setTitle(`${year}${monthAndDay}の日記`);
     setContent("");
   }, [year, monthAndDay]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
-  const titleMaxLength = 50;
+  // const titleMaxLength = 50;
   const contentMaxLength = 500;
 
   const onSubmit = async () => {
@@ -59,7 +59,7 @@ export function DiaryCreation({
           input: {
             firebaseUid: user.sub,
             content: content,
-            title: title,
+            title: "",
             diaryDate: formattedDate.split("T")[0] as DateString,
           },
         },
@@ -75,7 +75,7 @@ export function DiaryCreation({
     <>
       <div className="p-10 flex flex-col space-y-4 flex-grow">
         <Date year={year} monthAndDay={monthAndDay} />
-        <Textarea
+        {/* <Textarea
           placeholder="タイトルを書いてください..."
           className="resize-none"
           maxLength={titleMaxLength}
@@ -84,7 +84,7 @@ export function DiaryCreation({
         />
         <p>
           {title.length} / {titleMaxLength} 文字
-        </p>
+        </p> */}
         <Textarea
           placeholder="今日の出来事を書いてください..."
           className="flex-grow resize-none"

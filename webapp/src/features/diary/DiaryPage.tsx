@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CustomCalendar from "@/features/diary/CustomCalendar";
-import { DiaryCreation } from "@/features/diary/DiaryCreation";
+import DiaryCreation from "@/features/diary/DiaryCreation";
 import { UpdateDiary } from "@/features/diary/UpdateDiary";
 import DiaryHistory from "@/features/diary/DiaryHistory";
 import ReadDiary from "@/features/diary/ReadDiary";
