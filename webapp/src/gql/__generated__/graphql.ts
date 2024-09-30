@@ -120,10 +120,16 @@ export type MutationUpdateDiaryArgs = {
 export type Query = {
   /** 日記取得 */
   diaries: Array<Diary>;
+  /** 過去三件の日記取得 */
+  diaryHistory: Array<Diary>;
 };
 
 export type QueryDiariesArgs = {
   input: DiariesInput;
+};
+
+export type QueryDiaryHistoryArgs = {
+  firebaseUid: Scalars["String"]["input"];
 };
 
 export type UpdateDiaryInput = {
@@ -140,6 +146,19 @@ export type CreateDiaryMutationVariables = Exact<{
 }>;
 
 export type CreateDiaryMutation = { createDiary: string };
+
+export type GetDiaryHistoryQueryVariables = Exact<{
+  firebaseUid: Scalars["String"]["input"];
+}>;
+
+export type GetDiaryHistoryQuery = {
+  diaryHistory: Array<{
+    id: string;
+    title: string;
+    content: string;
+    diaryDate: DateString;
+  }>;
+};
 
 export type GetDiariesQueryVariables = Exact<{
   input: DiariesInput;
@@ -208,6 +227,63 @@ export const CreateDiaryDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateDiaryMutation, CreateDiaryMutationVariables>;
+export const GetDiaryHistoryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getDiaryHistory" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "firebaseUid" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "diaryHistory" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "firebaseUid" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "firebaseUid" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "content" } },
+                { kind: "Field", name: { kind: "Name", value: "diaryDate" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetDiaryHistoryQuery,
+  GetDiaryHistoryQueryVariables
+>;
 export const GetDiariesDocument = {
   kind: "Document",
   definitions: [
