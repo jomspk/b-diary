@@ -96,7 +96,7 @@ export default function ReadDiary({
                 <p>※リンク先の説明の欄に暗号化された日記があります</p>
               </div>
               <div>
-                <div className="text-lg font-bold">暗号化キー</div>
+                <div className="text-lg font-bold">複合化キー</div>
                 <div>
                   <span className="font-mono">
                     {showPassowrd
@@ -112,7 +112,7 @@ export default function ReadDiary({
                     {showPassowrd ? <EyeOff /> : <Eye />}
                   </Button>
                   <p className="text-red-600">
-                    ※暗号化キーは決して誰にも見せないでください
+                    ※複合化キーは決して誰にも見せないでください
                   </p>
                 </div>
               </div>
