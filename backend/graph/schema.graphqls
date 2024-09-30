@@ -70,6 +70,10 @@ type Query {
   日記取得
   """
   diaries(input: DiariesInput!): [Diary!]!
+  """
+  過去三件の日記取得
+  """
+  diaryHistory(firebaseUid: String!): [Diary!]!
 }
 
 type Mutation {

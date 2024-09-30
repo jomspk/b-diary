@@ -50,3 +50,11 @@ func (r diary) Update(ctx context.Context, db *gorm.DB, diary model.UpdateDiaryI
 	}
 	return &row, nil
 }
+
+func (r diary) Get(ctx context.Context, db *gorm.DB, firebaseUid string) ([]*db_model.CreateDiary, error) {
+	var diaries []*db_model.CreateDiary
+	if err := db.Table("create_diaries").Select("create_diaries.*").Joins("INNER JOIN bdiary_users ON create_diaries.user_id = bdiary_users.id").Where("bdiary_users.firebase_uid = ?", firebaseUid).Order("create_diaries.diary_date DESC").Limit(3).Find(&diaries).Error; err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return diaries, nil
+}

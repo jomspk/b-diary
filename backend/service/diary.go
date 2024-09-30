@@ -60,3 +60,11 @@ func (s *Diary) Update(ctx context.Context, input model.UpdateDiaryInput) (*db_m
 	}
 	return row, nil
 }
+
+func (s *Diary) Get(ctx context.Context, firebaseUid string) ([]*db_model.CreateDiary, error) {
+	row, err := s.diaryRepo.Get(ctx, s.db, firebaseUid)
+	if err != nil {
+		return nil, errors.Wrap(err)
+	}
+	return row, nil
+}

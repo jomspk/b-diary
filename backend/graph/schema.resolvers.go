@@ -68,6 +68,19 @@ func (r *queryResolver) Diaries(ctx context.Context, input model.DiariesInput) (
 	return res, nil
 }
 
+// DiaryHistory is the resolver for the diaryHistory field.
+func (r *queryResolver) DiaryHistory(ctx context.Context, firebaseUID string) ([]*model.Diary, error) {
+	diaries, err := r.DiarySvc.Get(ctx, firebaseUID)
+	if err != nil {
+		return nil, err
+	}
+	res := make([]*model.Diary, 0, len(diaries))
+	for _, diary := range diaries {
+		res = append(res, model.FormatDiaryResponse(diary))
+	}
+	return res, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
