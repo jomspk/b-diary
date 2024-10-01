@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"lxcard/backend/db_model"
+	"kohaku/backend/db_model"
 )
 
 type BdiaryUser interface {

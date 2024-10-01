@@ -7,7 +7,7 @@ import (
 
 	"github.com/oklog/ulid/v2"
 
-	"lxcard/backend/pkg/errors"
+	"kohaku/backend/pkg/errors"
 )
 
 var monotonic ulid.MonotonicReader

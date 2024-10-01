@@ -1,6 +1,6 @@
 package graph
 
-import "lxcard/backend/service"
+import "kohaku/backend/service"
 
 // This file will not be regenerated automatically.
 //

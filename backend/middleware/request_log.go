@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	app "lxcard/backend"
-	"lxcard/backend/pkg/errors"
+	app "kohaku/backend"
+	"kohaku/backend/pkg/errors"
 
 	"github.com/99designs/gqlgen/graphql"
 )

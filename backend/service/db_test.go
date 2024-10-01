@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/require"
 
-	"lxcard/backend/pkg/test"
+	"kohaku/backend/pkg/test"
 )
 
 func TestDB(t *testing.T) {

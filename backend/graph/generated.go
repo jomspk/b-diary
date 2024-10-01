@@ -13,8 +13,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"lxcard/backend/graph/model"
-	"lxcard/backend/graph/types"
+	"kohaku/backend/graph/model"
+	"kohaku/backend/graph/types"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -386,7 +386,7 @@ func (ec *executionContext) field_Mutation_createDiary_args(ctx context.Context,
 	var arg0 model.CreateUserDiaryInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateUserDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserDiaryInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateUserDiaryInput2kohakuᚋbackendᚋgraphᚋmodelᚐCreateUserDiaryInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -401,7 +401,7 @@ func (ec *executionContext) field_Mutation_updateDiary_args(ctx context.Context,
 	var arg0 model.UpdateDiaryInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateDiaryInput2kohakuᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -431,7 +431,7 @@ func (ec *executionContext) field_Query_diaries_args(ctx context.Context, rawArg
 	var arg0 model.DiariesInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDiariesInput2lxcardᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx, tmp)
+		arg0, err = ec.unmarshalNDiariesInput2kohakuᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1191,7 +1191,7 @@ func (ec *executionContext) _Query_diaries(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.Diary)
 	fc.Result = res
-	return ec.marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx, field.Selections, res)
+	return ec.marshalNDiary2ᚕᚖkohakuᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_diaries(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1262,7 +1262,7 @@ func (ec *executionContext) _Query_diaryHistory(ctx context.Context, field graph
 	}
 	res := resTmp.([]*model.Diary)
 	fc.Result = res
-	return ec.marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx, field.Selections, res)
+	return ec.marshalNDiary2ᚕᚖkohakuᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_diaryHistory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4052,7 +4052,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNCreateUserDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐCreateUserDiaryInput(ctx context.Context, v interface{}) (model.CreateUserDiaryInput, error) {
+func (ec *executionContext) unmarshalNCreateUserDiaryInput2kohakuᚋbackendᚋgraphᚋmodelᚐCreateUserDiaryInput(ctx context.Context, v interface{}) (model.CreateUserDiaryInput, error) {
 	res, err := ec.unmarshalInputCreateUserDiaryInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -4072,12 +4072,12 @@ func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.Sel
 	return res
 }
 
-func (ec *executionContext) unmarshalNDiariesInput2lxcardᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx context.Context, v interface{}) (model.DiariesInput, error) {
+func (ec *executionContext) unmarshalNDiariesInput2kohakuᚋbackendᚋgraphᚋmodelᚐDiariesInput(ctx context.Context, v interface{}) (model.DiariesInput, error) {
 	res, err := ec.unmarshalInputDiariesInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Diary) graphql.Marshaler {
+func (ec *executionContext) marshalNDiary2ᚕᚖkohakuᚋbackendᚋgraphᚋmodelᚐDiaryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Diary) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4101,7 +4101,7 @@ func (ec *executionContext) marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodel
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx, sel, v[i])
+			ret[i] = ec.marshalNDiary2ᚖkohakuᚋbackendᚋgraphᚋmodelᚐDiary(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4121,7 +4121,7 @@ func (ec *executionContext) marshalNDiary2ᚕᚖlxcardᚋbackendᚋgraphᚋmodel
 	return ret
 }
 
-func (ec *executionContext) marshalNDiary2ᚖlxcardᚋbackendᚋgraphᚋmodelᚐDiary(ctx context.Context, sel ast.SelectionSet, v *model.Diary) graphql.Marshaler {
+func (ec *executionContext) marshalNDiary2ᚖkohakuᚋbackendᚋgraphᚋmodelᚐDiary(ctx context.Context, sel ast.SelectionSet, v *model.Diary) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -4176,7 +4176,7 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdateDiaryInput2lxcardᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx context.Context, v interface{}) (model.UpdateDiaryInput, error) {
+func (ec *executionContext) unmarshalNUpdateDiaryInput2kohakuᚋbackendᚋgraphᚋmodelᚐUpdateDiaryInput(ctx context.Context, v interface{}) (model.UpdateDiaryInput, error) {
 	res, err := ec.unmarshalInputUpdateDiaryInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
