@@ -8,7 +8,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 
-	"lxcard/backend/pkg/errors"
+	"kohaku/backend/pkg/errors"
 )
 
 // MarshalUint implements a Uint value

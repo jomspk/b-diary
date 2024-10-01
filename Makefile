@@ -29,7 +29,7 @@ RDB_HOST ?= 127.0.0.1
 RDB_PORT ?= 3307
 RDB_USER ?= root
 RDB_PASS ?=
-RDB_NAME ?= lxcard
+RDB_NAME ?= kohaku
 DBMATE_DB_SCHEMA ?= "backend"
 DATABASE_HOST ?= "mysql://$(RDB_USER):$(RDB_PASS)@$(RDB_HOST):$(RDB_PORT)"
 
@@ -65,14 +65,14 @@ migrate-reset: migrate-drop migrate-up migrate-seed
 
 .PHONY: backend/format
 backend/format: ## コードのフォーマット
-	@goimports -local lxcard -w ./backend
+	@goimports -local kohaku -w ./backend
 
 .PHONY: gen
 gen: gen-dbmodel gen-api backend/format ## 生成系のコマンドを実行
 
 .PHONY: gen-dbmodel
 gen-dbmodel: clean-dbmodel ## DBモデルを生成
-	@xo schema mysql://$(RDB_USER):$(RDB_PASS)@$(RDB_HOST):$(RDB_PORT)/$(RDB_NAME) --out backend/db_model -e *.created_at -e *.updated_at --src backend/db_model/templates/go --go-import="lxcard/backend/pkg/tenant"
+	@xo schema mysql://$(RDB_USER):$(RDB_PASS)@$(RDB_HOST):$(RDB_PORT)/$(RDB_NAME) --out backend/db_model -e *.created_at -e *.updated_at --src backend/db_model/templates/go --go-import="kohaku/backend/pkg/tenant"
 
 .PHONY: clean-dbmodel
 clean-dbmodel: ## DBモデルを削除

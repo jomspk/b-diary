@@ -14,7 +14,7 @@ type Env struct {
 		User     string `envconfig:"RDB_USER" default:"root"`
 		Password string `envconfig:"RDB_PASSWORD" default:""`
 		Address  string `envconfig:"RDB_ADDRESS" default:"localhost:3307"`
-		Name     string `envconfig:"RDB_NAME" default:"lxcard"`
+		Name     string `envconfig:"RDB_NAME" default:"kohaku"`
 	}
 	Server struct {
 		TimeZone   string   `envconfig:"SERVER_TIMEZONE" default:"Asia/Tokyo"`

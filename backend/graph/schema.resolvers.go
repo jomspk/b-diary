@@ -7,7 +7,7 @@ package graph
 import (
 	"context"
 
-	"lxcard/backend/graph/model"
+	"kohaku/backend/graph/model"
 )
 
 // CreateDiary is the resolver for the createDiary field.

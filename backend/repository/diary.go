@@ -6,8 +6,8 @@ import (
 
 	"gorm.io/gorm"
 
-	"lxcard/backend/db_model"
-	"lxcard/backend/graph/model"
+	"kohaku/backend/db_model"
+	"kohaku/backend/graph/model"
 )
 
 type Diary interface {
