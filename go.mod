@@ -1,4 +1,4 @@
-module lxcard
+module kohaku
 
 go 1.22.3
 

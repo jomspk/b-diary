@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	app "lxcard/backend"
+	app "kohaku/backend"
 )
 
 func Recover(next http.Handler) http.Handler {
