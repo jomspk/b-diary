@@ -5,7 +5,7 @@ import (
 
 	"github.com/rs/cors"
 
-	"lxcard/backend/env"
+	"kohaku/backend/env"
 )
 
 func CORS() *cors.Cors {

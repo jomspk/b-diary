@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"lxcard/backend/db_model"
-	"lxcard/backend/graph/model"
-	"lxcard/backend/pkg/errors"
-	"lxcard/backend/pkg/ulid"
-	"lxcard/backend/repository"
+	"kohaku/backend/db_model"
+	"kohaku/backend/graph/model"
+	"kohaku/backend/pkg/errors"
+	"kohaku/backend/pkg/ulid"
+	"kohaku/backend/repository"
 
 	"gorm.io/gorm"
 )

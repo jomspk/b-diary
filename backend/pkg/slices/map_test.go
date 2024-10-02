@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"lxcard/backend/pkg/slices"
+	"kohaku/backend/pkg/slices"
 )
 
 func TestMap(t *testing.T) {

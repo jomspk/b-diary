@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	app "lxcard/backend"
+	app "kohaku/backend"
 )
 
 type errorStruct struct {
