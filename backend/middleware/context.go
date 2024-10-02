@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	app "kohaku/backend"
-	"kohaku/backend/env"
+	app "lxcard/backend"
+	"lxcard/backend/env"
 
 	"github.com/gofrs/uuid"
 )

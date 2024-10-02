@@ -16,14 +16,14 @@ import (
 	"github.com/justinas/alice"
 	"gorm.io/gorm"
 
-	app "kohaku/backend"
-	"kohaku/backend/env"
-	"kohaku/backend/graph"
-	mid "kohaku/backend/middleware"
-	"kohaku/backend/pkg/errors"
-	gormpkg "kohaku/backend/pkg/gorm"
-	"kohaku/backend/repository"
-	"kohaku/backend/service"
+	app "lxcard/backend"
+	"lxcard/backend/env"
+	"lxcard/backend/graph"
+	mid "lxcard/backend/middleware"
+	"lxcard/backend/pkg/errors"
+	gormpkg "lxcard/backend/pkg/gorm"
+	"lxcard/backend/repository"
+	"lxcard/backend/service"
 )
 
 func main() {
@@ -65,7 +65,7 @@ func realMain() error {
 	http.Handle("/v1/graphql", setupGlobalMiddleware(srv))
 
 	addr := fmt.Sprintf("%s:%s", env.Get().Server.APIHost, env.Get().Server.APIPort)
-	app.Logger.Info().Msgf("Serving kohaku on http://%s", addr)
+	app.Logger.Info().Msgf("Serving lxcard on http://%s", addr)
 
 	server := &http.Server{
 		Addr: "127.0.0.1:" + env.Get().Server.APIPort,

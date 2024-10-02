@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
-	"kohaku/backend/env"
+	"lxcard/backend/env"
 )
 
 func init() {

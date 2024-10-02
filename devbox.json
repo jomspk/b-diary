@@ -15,9 +15,15 @@
     "process-compose": "1.9.0"
   },
   "shell": {
-    "init_hook": ["unset GOROOT GOPATH GOMODCACHE GOBIN GOTOOLDIR", "./devbox/init.sh", "./devbox/welcome.sh"],
+    "init_hook": [
+      "unset GOROOT GOPATH GOMODCACHE GOBIN GOTOOLDIR",
+      "./devbox/init.sh",
+      "./devbox/welcome.sh"
+    ],
     "scripts": {
-      "test": ["echo \"Error: no test specified\" && exit 1"]
+      "test": [
+        "echo \"Error: no test specified\" && exit 1"
+      ]
     }
   },
   "env": {
@@ -25,7 +31,7 @@
     "PATH": "$PWD/bin:$PATH",
     "MYSQL_HOME": "$PWD/devbox/mysql",
     "MYSQL_DATA_DIR": "$PWD/devbox/mysql/data",
-    "MYSQL_UNIX_PORT": "/tmp/kohaku_mysql.sock",
+    "MYSQL_UNIX_PORT": "/tmp/lxcard_mysql.sock",
     "MYSQL_PORT": "3307",
     "DEVBOX_COREPACK_ENABLED": "true",
     "SKIP_INIT": "false"

@@ -1,6 +1,6 @@
-# Kohaku
+# layerx-swe-summer-intern-2024
 
-Kohaku Diaryのプロジェクト
+LayerXのSWEサマーインターン2024年の課題アプリケーションテンプレート
 
 ## セットアップ
 
@@ -56,39 +56,42 @@ devbox使っていて、process managerを終了したのに、portがうまく�
 
 `lsof -i:8080` というコマンドで、portを使用しているprocessを調べられます。processを終了しても `lsof -i:8080`でprocessが表示される場合には `kill -9 [pid]` で processを矯正終了させることが出来ます。
 
+
+
+
 ## Makefileの使い方
 
 - `Makefile`は、開発に便利なコマンドを定義したファイルです。rootディレクトリに配置されています。
 - `make` とコマンドを打つと、以下のような説明が表示されます。
 
-| コマンド              | 説明                           |
-| --------------------- | ------------------------------ |
-| make help             | ヘルプを出力                   |
-| make gen-help-md      | ヘルプをMarkdown形式で出力     |
-| make start            | サービス起動                   |
-| make stop             | サービス停止                   |
-| make go-install-tools | Goツールをインストール         |
-| make start-mysql      | MySQLを起動                    |
-| make mycli            | MySQLに接続                    |
-| make migrate-new      | マイグレーションファイル作成   |
-| make migrate-status   | マイグレーションステータス確認 |
-| make migrate-up       | マイグレーション実行           |
-| make migrate-down     | マイグレーションロールバック   |
-| make migrate-drop     | データベース削除               |
+| コマンド                  | 説明                |
+|-----------------------|-------------------|
+| make help             | ヘルプを出力            |
+| make gen-help-md      | ヘルプをMarkdown形式で出力 |
+| make start            | サービス起動            |
+| make stop             | サービス停止            |
+| make go-install-tools | Goツールをインストール      |
+| make start-mysql      | MySQLを起動          |
+| make mycli            | MySQLに接続          |
+| make migrate-new      | マイグレーションファイル作成    |
+| make migrate-status   | マイグレーションステータス確認   |
+| make migrate-up       | マイグレーション実行        |
+| make migrate-down     | マイグレーションロールバック    |
+| make migrate-drop     | データベース削除          |
 | make migrate-seed     | データベース初期データ投入     |
-| make gen              | 生成系のコマンドを実行         |
-| make gen-dbmodel      | DBモデルを生成                 |
-| make clean-dbmodel    | DBモデルを削除                 |
-| make serve-api        | APIサーバーを起動              |
+| make gen              | 生成系のコマンドを実行       |
+| make gen-dbmodel      | DBモデルを生成          |
+| make clean-dbmodel    | DBモデルを削除          |
+| make serve-api        | APIサーバーを起動        |
 
 ### そもそもMakefileって？
-
 - make は元々は C言語などのソースコードをビルドするために生まれたツールです。 ですが、最近では半ばタスクランナー的な用途に make を用いることがあり、このリポジトリでもそのように利用しています。
 - command部分は基本shですが、固有のフォーマットがあるので注意が必要です。
 - 以下、わかりやすかった記事です。（公式ドキュメントは一応載せておきますが、重厚なので今回の用途では読む必要はないです。）
   - 歴史的背景の説明: [2020年の Makefile](https://voyagegroup.github.io/make-advent-calendar-2020/001-makefile-in-2020)
   - 書式の説明: [Makefileの基本](https://zenn.dev/keitean/articles/aaef913b433677)
   - 公式ドキュメント: [GNU Make](https://www.gnu.org/software/make/manual/make.html)
+
 
 ## ルートディレクトの解説
 
@@ -104,8 +107,8 @@ $ tree -L 1
 ├── devbox
 ├── devbox.json
 ├── devbox.lock
-├── go.mod
-├── go.sum
+├── go.mod 
+├── go.sum 
 ├── gqlgen.yml
 ├── graphql.config.ts
 ├── package.json
@@ -119,7 +122,7 @@ $ tree -L 1
 今回の実装で重要なディレクトリは`backend`と`webapp`です。
 `backend`と`webapp`の詳しい説明は、それぞれのディレクトリの`README.md`に記載しています。
 
-その他、様々な設定ファイルがrootディレクトリに配置されています｡
+その他、様々な設定ファイルがrootディレクトリに配置されています｡  
 
 - backendの設定ファイル
   - `go.mod`は、backend配下のgoアプリケーションの依存関係を管理するためのファイルです。依存関係をインストールした結果、`go.sum`が生成され、依存関係の正確なバージョンが固定されます。

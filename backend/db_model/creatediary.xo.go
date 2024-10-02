@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// CreateDiary represents a row from 'kohaku.create_diaries'.
+// CreateDiary represents a row from 'lxcard.create_diaries'.
 type CreateDiary struct {
 	ID            string         `json:"id"`             // id
 	UserID        string         `json:"user_id"`        // user_id
