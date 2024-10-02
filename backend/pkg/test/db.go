@@ -10,10 +10,10 @@ import (
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/mysql"
 	"gorm.io/gorm"
 
-	app "kohaku/backend"
-	"kohaku/backend/db_schema"
-	"kohaku/backend/env"
-	gormdb "kohaku/backend/pkg/gorm"
+	app "lxcard/backend"
+	"lxcard/backend/db_schema"
+	"lxcard/backend/env"
+	gormdb "lxcard/backend/pkg/gorm"
 )
 
 var (
@@ -30,7 +30,7 @@ func DB(t *testing.T) *gorm.DB {
 		}
 
 		cfg := gormdb.NewDefaultMySQLConfig()
-		cfg.DBName = "test_kohaku"
+		cfg.DBName = "test_lxcard"
 		mysqlURL, err := url.Parse(
 			fmt.Sprintf("mysql://%s:%s@%s/%s",
 				cfg.User,

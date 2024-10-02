@@ -8,8 +8,8 @@ import (
 	"github.com/gofrs/uuid"
 	"github.com/rs/zerolog"
 
-	"kohaku/backend/env"
-	"kohaku/backend/pkg/pointer"
+	"lxcard/backend/env"
+	"lxcard/backend/pkg/pointer"
 )
 
 var Logger = pointer.Any(zerolog.Nop())

@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"kohaku/backend/db_model"
-	"kohaku/backend/pkg/errors"
+	"lxcard/backend/db_model"
+	"lxcard/backend/pkg/errors"
 
 	"gorm.io/gorm"
 )

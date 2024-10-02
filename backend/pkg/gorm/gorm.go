@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
 
-	"kohaku/backend/env"
-	"kohaku/backend/pkg/errors"
+	"lxcard/backend/env"
+	"lxcard/backend/pkg/errors"
 )
 
 func NewDefaultMySQLConfig() *mysql.Config {

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"kohaku/backend/pkg/slices"
+	"lxcard/backend/pkg/slices"
 )
 
 func TestFilter(t *testing.T) {

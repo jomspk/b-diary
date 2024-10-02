@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"kohaku/backend/pkg/errors"
+	"lxcard/backend/pkg/errors"
 )
 
 func ToSQLNullString(val *string) sql.NullString {

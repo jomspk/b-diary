@@ -2,7 +2,7 @@ name: backend
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
     branches:
       - "**"
@@ -17,8 +17,8 @@ jobs:
       - uses: reviewdog/action-golangci-lint@v2
         name: golangci-lint
         with:
-          go_version_file: "go.mod"
-          golangci_lint_version: "v1.59.1"
+          go_version_file: 'go.mod'
+          golangci_lint_version: 'v1.59.1'
 
   generate:
     name: Generate
@@ -26,10 +26,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL
-        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=kohaku -p 3307:3306 -d mysql:8.4 &
+        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=lxcard -p 3307:3306 -d mysql:8.4 &
       - uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version-file: 'go.mod'
       - name: Install go tools
         run: make go-install-tools
       - name: Run migration
@@ -52,10 +52,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL
-        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=test_kohaku -p 3307:3306 -d mysql:8.4 &
+        run: docker run --name mysql-test -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=test_lxcard -p 3307:3306 -d mysql:8.4 &
       - uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version-file: 'go.mod'
       - name: Run tests
         run: make backend/test
 
@@ -66,7 +66,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version-file: 'go.mod'
       - name: Build
         run: go build -v ./...
 

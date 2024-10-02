@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"time"
 
-	"kohaku/backend/db_model"
-	"kohaku/backend/pkg/null"
+	"lxcard/backend/db_model"
+	"lxcard/backend/pkg/null"
 )
 
 func FormatDiaryResponse(row *db_model.CreateDiary) *Diary {
