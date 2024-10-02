@@ -19,7 +19,7 @@ processes:
   mysql:
     command: |
       if [ ! -d "$MYSQL_DATA_DIR" ]; then
-        mkdir $MYSQL_DATA_DIR
+        mkdir -p $MYSQL_DATA_DIR
       fi
       if [ -z "$(ls -A $MYSQL_DATA_DIR)" ]; then
         mysqld --datadir=$MYSQL_DATA_DIR --initialize-insecure

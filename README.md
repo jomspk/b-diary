@@ -23,6 +23,12 @@ Kohaku Diaryのプロジェクト
 $ devbox shell
 ```
 
+この状態だとdevbox/mysql内にデータベースが作成されていないので以下のコマンドを実行する。
+
+```bash
+$ make migrate-reset
+```
+
 今後､このコマンドで起動したシェル上で開発を進めていきます｡
 
 ### 各サービスの起動
