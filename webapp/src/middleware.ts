@@ -6,6 +6,9 @@ export async function middleware(request: NextRequest) {
   const session = await getSession(request, NextResponse.next());
   const url = request.nextUrl.clone();
   if (!session) {
+    if (url.pathname === "/login") {
+      return NextResponse.next();
+    }
     url.pathname = "/login";
     return NextResponse.redirect(url);
   } else {
