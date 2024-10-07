@@ -23,8 +23,8 @@
   "env": {
     "GOENV": "off",
     "PATH": "$PWD/bin:$PATH",
-    "MYSQL_HOME": "$PWD/devbox/mysql",
-    "MYSQL_DATA_DIR": "$PWD/devbox/mysql/data",
+    "MYSQL_HOME": "/home/mysql",
+    "MYSQL_DATA_DIR": "/home/mysql/data",
     "MYSQL_UNIX_PORT": "/tmp/kohaku_mysql.sock",
     "MYSQL_PORT": "3307",
     "DEVBOX_COREPACK_ENABLED": "true",
