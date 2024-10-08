@@ -55,7 +55,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
 
   return (
     <div className="min-h-full grid grid-cols-3">
-      <div className="bg-[url('/bdiary_background.png')] bg-cover bg-center">
+      <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center">
         <div className="space-y-4 col-span-1 p-4">
           <div className="text-white text-xl">琥珀</div>
           <CustomCalendar
