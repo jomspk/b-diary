@@ -31,7 +31,7 @@ export default function DiaryCreation({
 }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
   // const [title, setTitle] = useState<string>("");
-  const [ createDiary ] = useMutation(Mutation, {
+  const [createDiary] = useMutation(Mutation, {
     onCompleted() {
       onReload();
     },
