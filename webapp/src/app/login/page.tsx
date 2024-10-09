@@ -9,7 +9,7 @@ import {
 
 export default function Component() {
   return (
-    <div className="bg-[url('/bdiary_background.png')] bg-cover bg-center min-h-full w-full flex items-center justify-center p-4">
+    <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center min-h-full w-full flex items-center justify-center p-4">
       <Card className="w-3/5 min-h-96 flex items-center justify-center flex-col p-10">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">琥珀</CardTitle>
