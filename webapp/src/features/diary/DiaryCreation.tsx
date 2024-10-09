@@ -6,7 +6,7 @@ import Date from "@/components/layout/Date";
 import { gql } from "@/gql/__generated__";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useMutation } from "@apollo/client";
+import { useMutation, useSuspenseQuery } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { DateString } from "@/gql/__generated__/graphql";
 
@@ -20,16 +20,22 @@ type DiaryCreationProps = {
   year: string | undefined;
   monthAndDay: string | undefined;
   formattedDate: string;
+  onReload: Function;
 };
 
 export default function DiaryCreation({
   year,
   monthAndDay,
   formattedDate,
+  onReload
 }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
   // const [title, setTitle] = useState<string>("");
-  const [createDiary] = useMutation(Mutation);
+  const [ createDiary ] = useMutation(Mutation, {
+    onCompleted() {
+      onReload();
+    },
+  });
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 

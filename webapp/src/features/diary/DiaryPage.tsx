@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CustomCalendar from "@/features/diary/CustomCalendar";
 import DiaryCreation from "@/features/diary/DiaryCreation";
 import { UpdateDiary } from "@/features/diary/UpdateDiary";
@@ -30,6 +30,12 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const formattedDate = date
     ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString()
     : "";
+  const currentYearMonth = useMemo(() => {
+    return date
+      ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1)).toISOString()
+      : "";
+  }, [ date ]);
+  
   const firebaseUid = user && user.sub ? user.sub : "";
   const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
   const monthAndDay = date?.toLocaleDateString("ja-JP", {
@@ -39,19 +45,27 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
 
   const { data, refetch } = useSuspenseQuery(Query, {
     variables: {
-      input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
+      input: { date: currentYearMonth as TimeString, firebaseUid: firebaseUid },
     },
   });
 
-  const diary = data.diaries.find((diary) => {
-    return new Date(diary.diaryDate).toDateString() === date?.toDateString();
-  });
+  const diary = useMemo(() => {
+    return data.diaries.find((diary) => {
+      return new Date(diary.diaryDate).toDateString() === date?.toDateString();
+    });
+  }, [ data, date ]);
 
   useEffect(() => {
-    refetch({
-      input: { date: formattedDate as TimeString, firebaseUid: firebaseUid },
-    });
-  }, [formattedDate, firebaseUid, refetch]);
+    if (currentYearMonth) {
+      refetch({
+        input: { date: currentYearMonth as TimeString, firebaseUid: firebaseUid },
+      });
+    }
+  }, [ currentYearMonth, firebaseUid, refetch ]);
+  
+  const onReload = async () => {
+    await refetch();
+  }
 
   return (
     <div className="min-h-full grid grid-cols-3">
@@ -71,13 +85,14 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
           diary.saveToBcAt ? (
             <ReadDiary diary={diary} year={year} monthAndDay={monthAndDay} />
           ) : (
-            <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} />
+            <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} onReload={onReload} />
           )
         ) : (
           <DiaryCreation
             year={year}
             monthAndDay={monthAndDay}
             formattedDate={formattedDate}
+            onReload={onReload}
           />
         )}
       </div>
