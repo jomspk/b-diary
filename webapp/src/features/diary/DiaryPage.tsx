@@ -34,8 +34,8 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     return date
       ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1)).toISOString()
       : "";
-  }, [ date ]);
-  
+  }, [date]);
+
   const firebaseUid = user && user.sub ? user.sub : "";
   const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
   const monthAndDay = date?.toLocaleDateString("ja-JP", {
@@ -53,19 +53,22 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     return data.diaries.find((diary) => {
       return new Date(diary.diaryDate).toDateString() === date?.toDateString();
     });
-  }, [ data, date ]);
+  }, [data, date]);
 
   useEffect(() => {
     if (currentYearMonth) {
       refetch({
-        input: { date: currentYearMonth as TimeString, firebaseUid: firebaseUid },
+        input: {
+          date: currentYearMonth as TimeString,
+          firebaseUid: firebaseUid,
+        },
       });
     }
-  }, [ currentYearMonth, firebaseUid, refetch ]);
-  
+  }, [currentYearMonth, firebaseUid, refetch]);
+
   const onReload = async () => {
     await refetch();
-  }
+  };
 
   return (
     <div className="min-h-full grid grid-cols-3">
@@ -85,7 +88,12 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
           diary.saveToBcAt ? (
             <ReadDiary diary={diary} year={year} monthAndDay={monthAndDay} />
           ) : (
-            <UpdateDiary year={year} monthAndDay={monthAndDay} diary={diary} onReload={onReload} />
+            <UpdateDiary
+              year={year}
+              monthAndDay={monthAndDay}
+              diary={diary}
+              onReload={onReload}
+            />
           )
         ) : (
           <DiaryCreation
