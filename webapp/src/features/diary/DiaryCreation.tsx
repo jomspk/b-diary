@@ -6,7 +6,7 @@ import Date from "@/components/layout/Date";
 import { gql } from "@/gql/__generated__";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useMutation, useSuspenseQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { DateString } from "@/gql/__generated__/graphql";
 
