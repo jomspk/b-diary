@@ -27,12 +27,22 @@ type UpdateDiaryProps = {
     saveToBcAt: TimeString | null;
     tokenId: number | null;
   };
+  onReload: () => Promise<void>;
 };
 
-export function UpdateDiary({ year, monthAndDay, diary }: UpdateDiaryProps) {
+export function UpdateDiary({
+  year,
+  monthAndDay,
+  diary,
+  onReload,
+}: UpdateDiaryProps) {
   const [content, setContent] = useState<string>("");
   // const [title, setTitle] = useState<string>("");
-  const [updateDiary] = useMutation(Mutation);
+  const [updateDiary] = useMutation(Mutation, {
+    onCompleted() {
+      onReload();
+    },
+  });
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 
