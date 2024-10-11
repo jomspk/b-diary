@@ -20,16 +20,22 @@ type DiaryCreationProps = {
   year: string | undefined;
   monthAndDay: string | undefined;
   formattedDate: string;
+  onReload: () => Promise<void>;
 };
 
 export default function DiaryCreation({
   year,
   monthAndDay,
   formattedDate,
+  onReload,
 }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
   // const [title, setTitle] = useState<string>("");
-  const [createDiary] = useMutation(Mutation);
+  const [createDiary] = useMutation(Mutation, {
+    onCompleted() {
+      onReload();
+    },
+  });
   const { toast } = useToast();
   const { user, error, isLoading } = useUser();
 
