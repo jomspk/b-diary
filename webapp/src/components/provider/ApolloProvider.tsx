@@ -30,7 +30,7 @@ const makeClient = () => {
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: "network-only",
+        fetchPolicy: "cache-first",
       },
     },
     link: httpLink,

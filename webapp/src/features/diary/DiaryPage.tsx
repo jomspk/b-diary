@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import CustomCalendar from "@/features/diary/CustomCalendar";
 import DiaryCreation from "@/features/diary/DiaryCreation";
 import { UpdateDiary } from "@/features/diary/UpdateDiary";
@@ -36,7 +36,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
       : "";
   }, [date]);
 
-  const firebaseUid = user && user.sub ? user.sub : "";
+  const firebaseUid = user?.sub ? user.sub : "";
   const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
   const monthAndDay = date?.toLocaleDateString("ja-JP", {
     month: "long",
@@ -54,17 +54,6 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
       return new Date(diary.diaryDate).toDateString() === date?.toDateString();
     });
   }, [data, date]);
-
-  useEffect(() => {
-    if (currentYearMonth) {
-      refetch({
-        input: {
-          date: currentYearMonth as TimeString,
-          firebaseUid: firebaseUid,
-        },
-      });
-    }
-  }, [currentYearMonth, firebaseUid, refetch]);
 
   const onReload = async () => {
     await refetch();
