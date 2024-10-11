@@ -25,6 +25,17 @@ const Query = gql(/* GraphQL */ `
   }
 `);
 
+const HistoryQuery = gql(/* GraphQL */ `
+  query getDiaryHistory($firebaseUid: String!) {
+    diaryHistory(firebaseUid: $firebaseUid) {
+      id
+      title
+      content
+      diaryDate
+    }
+  }
+`);
+
 export default function DiaryPage({ user }: { user: Claims | undefined }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const formattedDate = date
@@ -49,6 +60,13 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     },
   });
 
+  const { data: historyData, refetch: historyRefetch } = useSuspenseQuery(
+    HistoryQuery,
+    {
+      variables: { firebaseUid: firebaseUid },
+    }
+  );
+
   const diary = useMemo(() => {
     return data.diaries.find((diary) => {
       return new Date(diary.diaryDate).toDateString() === date?.toDateString();
@@ -57,6 +75,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
 
   const onReload = async () => {
     await refetch();
+    await historyRefetch();
   };
 
   return (
@@ -69,7 +88,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
             setDate={setDate}
             monthEntries={data.diaries}
           />
-          <DiaryHistory firebaseUid={firebaseUid} />
+          <DiaryHistory diarys={historyData.diaryHistory} />
         </div>
       </div>
       <div className="col-span-2 flex flex-col justify-between h-screen">
