@@ -10,7 +10,7 @@ import { gql } from "@/gql/__generated__";
 import { useSuspenseQuery } from "@apollo/client";
 import { TimeString } from "@/gql/__generated__/graphql";
 import { Claims } from "@auth0/nextjs-auth0";
-
+import Image from "next/image";
 const Query = gql(/* GraphQL */ `
   query GetDiaries($input: DiariesInput!) {
     diaries(input: $input) {
@@ -82,7 +82,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     <div className="min-h-full grid grid-cols-3">
       <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center">
         <div className="space-y-4 col-span-1 p-4">
-          <div className="text-white text-xl">琥珀</div>
+          <Image src="/kohakuLogo.svg" alt="琥珀" width={150} height={150} />
           <CustomCalendar
             date={date}
             setDate={setDate}
