@@ -12,7 +12,9 @@ export default function Component() {
     <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center min-h-full w-full flex items-center justify-center p-4">
       <Card className="w-3/5 min-h-96 flex items-center justify-center flex-col p-10">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">琥珀</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            琥珀Diary
+          </CardTitle>
         </CardHeader>
         <CardContent className="my-7">
           <p>

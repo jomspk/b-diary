@@ -32,7 +32,7 @@ export default function ReadDiary({
 
   const handleOpenSeaLink = () => {
     window.open(
-      `https://testnets.opensea.io/ja/assets/amoy/0xd469270dc415774aa0c3a861f75fed4aa2a79973/${diary.tokenId}`,
+      `https://opensea.io/ja/assets/matic/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}/${diary.tokenId}`,
       "_blank"
     );
   };
