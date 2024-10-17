@@ -1,31 +1,27 @@
-import { gql } from "@/gql/__generated__";
-import { useSuspenseQuery } from "@apollo/client";
+import { DateString } from "@/gql/__generated__/graphql";
 
 const previewDiaryMaxLength = 10;
 
-const Query = gql(/* GraphQL */ `
-  query getDiaryHistory($firebaseUid: String!) {
-    diaryHistory(firebaseUid: $firebaseUid) {
-      id
-      title
-      content
-      diaryDate
-    }
-  }
-`);
-export default function DiaryHistory({ firebaseUid }: { firebaseUid: string }) {
+type DiaryHistoryProps = {
+  diarys: {
+    id: string;
+    title: string;
+    content: string;
+    diaryDate: DateString;
+  }[];
+};
+
+export default function DiaryHistory({ diarys }: DiaryHistoryProps) {
   const truncateText = (text: string) => {
     return text.length > previewDiaryMaxLength
       ? text.substring(0, previewDiaryMaxLength) + "..."
       : text;
   };
-  const { data } = useSuspenseQuery(Query, {
-    variables: { firebaseUid: firebaseUid },
-  });
+
   return (
     <div className="p-4 bg-white rounded-md space-y-4">
       <div className="font-bold">履歴</div>
-      {data.diaryHistory.map((entry) => (
+      {diarys.map((entry) => (
         <div key={entry.id}>
           <div className="bg-gray-300 h-px my-3"></div>
           <div className="flex space-x-4">
