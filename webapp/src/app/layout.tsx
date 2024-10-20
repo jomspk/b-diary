@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { headers } from "next/headers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -15,8 +16,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = headers();
+  const pathname = headersList.get("x-invoke-path") || "/";
+  const currentUrl = `https://kohakudiary.com${pathname}`;
   return (
     <html lang="en">
+      <head>
+        <meta property="og:title" content="琥珀日記" />
+        <meta
+          property="og:description"
+          content="日記データを暗号化してブロックチェーンにバックアップした日記アプリです。"
+        />
+        <meta property="og:url" content={currentUrl} />
+        <meta
+          property="og:image"
+          content="https://kohakudiary.com/kohakuTitle.jpg"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="琥珀日記" />
+        <meta property="og:locale" content="ja_JP" />
+      </head>
       <UserProvider>
         <body
           className={cn(

@@ -82,7 +82,12 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
     <div className="min-h-full grid grid-cols-3">
       <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center">
         <div className="space-y-4 col-span-1 p-4">
-          <Image src="/kohakuLogo.svg" alt="琥珀" width={150} height={150} />
+          <Image
+            src="/kohakuLogoAndTitle.svg"
+            alt="琥珀"
+            width={150}
+            height={150}
+          />
           <CustomCalendar
             date={date}
             setDate={setDate}
