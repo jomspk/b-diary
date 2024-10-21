@@ -85,7 +85,7 @@ export function UpdateDiary({
 
   return (
     <>
-      <div className="p-10 flex flex-col space-y-4 flex-grow">
+      <div className="p-[16px] md:pt-0 flex flex-col space-y-4 flex-grow max-w-[540px] w-full">
         <Date year={year} monthAndDay={monthAndDay} />
         {/* <Textarea
           placeholder="タイトルを書いてください..."
@@ -110,7 +110,7 @@ export function UpdateDiary({
       </div>
       <div className="bg-gray-200 flex justify-center w-full p-3">
         <Button
-          className="bg-orange-500 w-3/12 hover:bg-orange-400"
+          className="bg-primary w-[160px] hover:bg-primary/50"
           onClick={onSubmit}
         >
           更新

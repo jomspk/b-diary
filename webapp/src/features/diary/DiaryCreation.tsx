@@ -104,7 +104,7 @@ export default function DiaryCreation({
       </div>
       <div className="bg-gray-200 flex justify-center w-full p-3">
         <Button
-          className="bg-primary w-[160px] hover:bg-orange-400"
+          className="bg-primary w-[160px] hover:bg-primary/50"
           onClick={onSubmit}
         >
           保存

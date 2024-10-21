@@ -41,7 +41,7 @@ export default function ReadDiary({
   };
 
   return (
-    <div className="relative flex flex-col flex-grow">
+    <div className="relative flex flex-col flex-grow w-full items-center">
       <AnimatePresence>
         {isDrawerOpen && (
           <motion.div
@@ -54,7 +54,7 @@ export default function ReadDiary({
         )}
       </AnimatePresence>
 
-      <div className="p-10 relative flex flex-col flex-grow">
+      <div className="p-[16px] md:pt-0 flex flex-col space-y-4 flex-grow max-w-[540px] w-full">
         <div className="relative z-10 flex-grow space-y-4">
           <Date year={year} monthAndDay={monthAndDay} />
           <div className="flex flex-col space-y-4">
@@ -68,7 +68,7 @@ export default function ReadDiary({
       <div className="bg-gray-200 flex justify-center w-full p-3">
         <Button
           onClick={openDrawer}
-          className="bg-orange-500 hover:bg-orange-400"
+          className="bg-orange-500 hover:bg-primary/50"
         >
           日記が守られていることを確認
         </Button>
@@ -118,7 +118,7 @@ export default function ReadDiary({
               </div>
               <div className="flex flex-row-reverse">
                 <Button
-                  className="bg-orange-500 hover:bg-orange-400"
+                  className="bg-primary hover:bg-primary/50"
                   onClick={closeDrawer}
                 >
                   閉じる

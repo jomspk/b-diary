@@ -96,7 +96,10 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
           </div>
           <CustomCalendar
             date={date}
-            setDate={setDate}
+            setDate={(date) => {
+              setMenuOpen(false);
+              setDate(date);
+            }}
             monthEntries={data.diaries}
           />
           <DiaryHistory diarys={historyData.diaryHistory} />
