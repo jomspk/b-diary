@@ -6,41 +6,41 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Checkbox, CheckboxLabel } from "@/components/ui/checkbox";
 import Terms from "@/features/login/Terms";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Component() {
   const [onChecked, setOnChecked] = useState<CheckedState>(false);
   return (
     <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center min-h-full w-full flex items-center justify-center p-4">
-      <Card className="w-3/5 min-h-96 flex items-center justify-center flex-col p-10">
+      <Card className="w-full max-w-[720px] min-h-96 flex items-center justify-center flex-col py-[40px] md:py-[80px] px-1 gap-[40px]">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            琥珀Diary
-          </CardTitle>
+          <Image src="/logo_text.svg" alt="琥珀" width={202} height={57} />
         </CardHeader>
-        <CardContent className="my-7">
+        <CardContent className="w-full max-w-[448px]">
           <p>
             当社の製品は、あなたの生産性を向上させ、ワークフローを効率化します。
             今すぐログインして、素晴らしい機能をお試しください！
           </p>
           <Terms />
-          <div className="flex items-center space-x-2 mt-4">
+        </CardContent>
+        <CardContent className="w-full max-w-[448px]">
+          <div className="flex items-center space-x-2">
             <Checkbox
               id="terms"
               checked={onChecked}
               onCheckedChange={setOnChecked}
             />
-            <CheckboxLabel htmlFor="terms">同意する</CheckboxLabel>
+            <CheckboxLabel htmlFor="terms">同意します</CheckboxLabel>
           </div>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Button className="w-full sm:w-auto" disabled={!onChecked}>
-            <a href="/api/auth/login">ログイン</a>
+            <a href="/api/auth/login">新規登録・ログイン</a>
           </Button>
         </CardFooter>
       </Card>

@@ -8,8 +8,11 @@ export default function Terms() {
   const [markdown, setMarkdown] = useState("");
 
   const components = {
-    h1: ({ ...props }) => <h1 className="my-4">{props.children}</h1>,
-    h2: ({ ...props }) => <h2 className="mt-4 mb-2">{props.children}</h2>,
+    h1: ({ ...props }) => <h1 className="my-4 text-bold">{props.children}</h1>,
+    h2: ({ ...props }) => (
+      <h2 className="mt-4 mb-2 text-bold">{props.children}</h2>
+    ),
+    hr: () => <hr className="my-4" />,
   };
 
   useEffect(() => {
