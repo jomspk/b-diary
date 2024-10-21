@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DateString } from "@/gql/__generated__/graphql";
 
@@ -46,7 +46,9 @@ export default function CustomCalendar({
     const days = [];
 
     for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-10"></div>);
+      days.push(
+        <div key={`empty-${i}`} className="h-[32px] w-[32px] m-auto"></div>
+      );
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -61,10 +63,10 @@ export default function CustomCalendar({
       days.push(
         <div
           key={day}
-          className={`flex items-center justify-center rounded-full cursor-pointer h-10 w-10
-            ${isToday ? "bg-orange-500 text-white" : ""}
-            ${isSelected ? "border-2 border-orange-500" : ""}
-            ${isHighlighted ? "bg-orange-100" : ""}
+          className={`flex items-center justify-center rounded-full cursor-pointer h-[32px] w-[32px] m-auto
+            ${isToday ? "bg-primary text-white" : ""}
+            ${isSelected ? "border-2 border-primary" : ""}
+            ${isHighlighted ? "bg-primary/20" : ""}
           `}
           onClick={() => setDate(currentDate)}
         >
@@ -85,42 +87,68 @@ export default function CustomCalendar({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-white rounded-lg shadow">
-      <div className="flex justify-between flex-col items-center mb-4 space-y-2">
-        <div className="space-x-2">
+    <div className="h-[420px] w-full max-w-md mx-auto py-[48px] px-[17px] bg-white rounded-lg shadow">
+      <div className="flex justify-between flex-col items-center mb-[24px] space-y-[10px]">
+        <div className="flex justify-between items-center w-full max-w-[160px]">
           <Button variant="ghost" size="icon" onClick={() => changeYear(-1)}>
-            <ChevronLeft className="h-4 w-4" />
+            <Image
+              src="/arrow.svg"
+              alt="琥珀"
+              width={19}
+              height={13}
+              className="h-[19px] w-[13px]"
+            />
           </Button>
-          <span className="font-semibold">
+          <span className="font-bold text-xl">
             {date.toLocaleString("ja-JP", { year: "numeric" })}
           </span>
           <Button variant="ghost" size="icon" onClick={() => changeYear(1)}>
-            <ChevronRight className="h-4 w-4" />
+            <Image
+              src="/arrow.svg"
+              alt="琥珀"
+              width={19}
+              height={13}
+              className="h-[19px] w-[13px] rotate-180"
+            />
           </Button>
         </div>
-        <div className="space-x-2">
+        <div className="flex justify-between items-center w-full max-w-[160px]">
           <Button variant="ghost" size="icon" onClick={() => changeMonth(-1)}>
-            <ChevronLeft className="h-4 w-4" />
+            <Image
+              src="/arrow.svg"
+              alt="琥珀"
+              width={19}
+              height={13}
+              className="h-[19px] w-[13px]"
+            />
           </Button>
-          <span className="font-semibold">
+          <span className="font-bold text-xl">
             {date.toLocaleString("ja-JP", { month: "long" })}
           </span>
           <Button variant="ghost" size="icon" onClick={() => changeMonth(1)}>
-            <ChevronRight className="h-4 w-4" />
+            <Image
+              src="/arrow.svg"
+              alt="琥珀"
+              width={19}
+              height={13}
+              className="h-[19px] w-[13px] rotate-180"
+            />
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-7 gap-2 mb-2">
+      <div className="grid grid-cols-7 gap-x-[24px] mb-[8px]">
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="text-center font-semibold text-orange-500 h-10 w-10"
+            className="text-center font-medium text-primary h-[32px] w-[32px]"
           >
             {day}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-2">{renderCalendar()}</div>
+      <div className="grid grid-cols-7 gap-y-[8px] gap-x-[24px]">
+        {renderCalendar()}
+      </div>
     </div>
   );
 }

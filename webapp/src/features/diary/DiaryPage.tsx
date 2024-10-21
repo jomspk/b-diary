@@ -11,7 +11,7 @@ import { useSuspenseQuery } from "@apollo/client";
 import { TimeString } from "@/gql/__generated__/graphql";
 import { Claims } from "@auth0/nextjs-auth0";
 import Image from "next/image";
-import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { Menu, X } from "lucide-react";
 
 const Query = gql(/* GraphQL */ `
   query GetDiaries($input: DiariesInput!) {
@@ -83,15 +83,15 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   };
 
   return (
-    <div className="min-h-full grid grid-cols-3">
+    <div className="min-h-full flex">
       <div
-        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center absolute md:relative h-full overflow-x-hidden	 ${menuOpen ? "opacity-100 w-full sm:w-auto" : "opacity-0 w-0"} transition-all duration-300 ease-in-out`}
+        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative h-full overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out`}
       >
-        <div className="space-y-4 col-span-1 p-4">
+        <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[16px] pt-[56px] sm:p-[24px] space-y-[24px]">
           <div className="flex flex-row justify-between">
-            <Image src="/kohakuLogo.svg" alt="琥珀" width={150} height={150} />
+            <Image src="/logo.svg" alt="琥珀" width={46} height={46} />
             <button onClick={() => setMenuOpen(false)} className="md:hidden">
-              <Cross1Icon className="h-6 w-6" />
+              <X className="h-[32px] w-[32px]" />
             </button>
           </div>
           <CustomCalendar
@@ -102,12 +102,12 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
           <DiaryHistory diarys={historyData.diaryHistory} />
         </div>
       </div>
-      <div className="col-span-3 md:col-span-2 flex flex-col justify-between h-screen">
+      <div className="col-span-3 md:col-span-2 flex-1 flex flex-col justify-stretch pt-[84px] items-center">
         <button
           onClick={() => setMenuOpen(true)}
-          className="md:hidden pt-4 pl-4"
+          className="md:hidden absolute top-[20px] left-[20px] md:top-[40px] md:left-[40px]"
         >
-          <HamburgerMenuIcon className="h-6 w-6" />
+          <Menu className="h-[24px] w-[24px]" />
         </button>
         {diary ? (
           diary.saveToBcAt ? (
