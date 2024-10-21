@@ -26,7 +26,7 @@ export default function Terms() {
   }, []);
 
   return (
-    <ScrollArea className="h-[300px] scroll-smooth mt-4 border-2 rounded-sm">
+    <ScrollArea className="h-[200px] scroll-smooth mt-4 border-2 rounded-sm">
       <article className="prose flex-1">
         <ReactMarkdown className="py-6 px-4" components={components}>
           {markdown}
