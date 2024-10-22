@@ -85,27 +85,37 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
   return (
     <div className="min-h-full flex">
       <div
-        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative h-full overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out`}
+        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative h-screen overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out overflow-scroll	`}
       >
         <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[16px] pt-[56px] sm:p-[24px] space-y-[24px]">
           <div className="flex flex-row justify-between">
-            <Image src="/logo.svg" alt="琥珀" width={46} height={46} />
+            <Image
+              className="md:hidden"
+              src="/logo.svg"
+              alt="琥珀"
+              width={48}
+              height={48}
+            />
+            <Image
+              className="hidden md:block"
+              src="/logo_text.svg"
+              alt="琥珀"
+              width={160}
+              height={48}
+            />
             <button onClick={() => setMenuOpen(false)} className="md:hidden">
               <X className="h-[32px] w-[32px]" />
             </button>
           </div>
           <CustomCalendar
             date={date}
-            setDate={(date) => {
-              setMenuOpen(false);
-              setDate(date);
-            }}
+            setDate={setDate}
             monthEntries={data.diaries}
           />
           <DiaryHistory diarys={historyData.diaryHistory} />
         </div>
       </div>
-      <div className="col-span-3 md:col-span-2 flex-1 flex flex-col justify-stretch pt-[84px] items-center">
+      <div className="col-span-3 md:col-span-2 flex-1 flex flex-col pt-[84px] items-center">
         <button
           onClick={() => setMenuOpen(true)}
           className="md:hidden absolute top-[20px] left-[20px] md:top-[40px] md:left-[40px]"
