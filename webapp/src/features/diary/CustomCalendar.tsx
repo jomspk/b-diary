@@ -25,7 +25,7 @@ export default function CustomCalendar({
   if (!date) {
     return null;
   }
-  //   const highlightedDates = [new Date(2023, 5, 15), new Date(2023, 5, 20)]; // 例: 6月15日と20日
+
   const highlightedDates = monthEntries.map(
     (entry) => new Date(entry.diaryDate)
   );
@@ -66,7 +66,7 @@ export default function CustomCalendar({
           className={`flex items-center justify-center rounded-full cursor-pointer h-[32px] w-[32px] m-auto
             ${isToday ? "bg-primary text-white" : ""}
             ${isSelected ? "border-2 border-primary" : ""}
-            ${isHighlighted ? "bg-primary/20" : ""}
+            ${isHighlighted && !isToday ? "bg-primary/20" : ""}
           `}
           onClick={() => setDate(currentDate)}
         >
