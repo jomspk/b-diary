@@ -45,7 +45,7 @@ export default function ReadDiary({
       <AnimatePresence>
         {isDrawerOpen && (
           <motion.div
-            className="absolute inset-0 bg-black bg-opacity-50 z-40"
+            className="absolute inset-0 bg-black bg-opacity-50 z-40 h-full -mt-[84px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
