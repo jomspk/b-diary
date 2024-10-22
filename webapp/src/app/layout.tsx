@@ -1,4 +1,4 @@
-import { Inter as FontSans } from "next/font/google";
+import { Inter as FontSans, Noto_Sans_JP } from "next/font/google";
 import { ApolloProvider } from "@/components/provider/ApolloProvider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +8,11 @@ import { UserProvider } from "@auth0/nextjs-auth0/client";
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const noto = Noto_Sans_JP({
+  subsets: ["latin"],
+  variable: "--font-noto",
 });
 
 export default function RootLayout({
@@ -21,6 +26,7 @@ export default function RootLayout({
         <body
           className={cn(
             "h-screen bg-background font-sans antialiased",
+            noto.variable,
             fontSans.variable
           )}
         >
