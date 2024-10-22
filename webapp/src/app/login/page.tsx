@@ -29,14 +29,16 @@ export default function Component() {
             </p>
             <Terms />
           </CardContent>
-          <CardContent className="w-full max-w-[448px]">
+          <CardContent>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
                 checked={onChecked}
                 onCheckedChange={setOnChecked}
               />
-              <CheckboxLabel htmlFor="terms">同意します</CheckboxLabel>
+              <CheckboxLabel htmlFor="terms" className="text-base">
+                利用規約に同意する
+              </CheckboxLabel>
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
