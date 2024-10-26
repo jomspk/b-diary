@@ -30,7 +30,6 @@ export default function DiaryCreation({
   onReload,
 }: DiaryCreationProps) {
   const [content, setContent] = useState<string>("");
-  // const [title, setTitle] = useState<string>("");
   const [createDiary] = useMutation(Mutation, {
     onCompleted() {
       onReload();
@@ -40,14 +39,12 @@ export default function DiaryCreation({
   const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    // setTitle(`${year}${monthAndDay}の日記`);
     setContent("");
   }, [year, monthAndDay]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
-  // const titleMaxLength = 50;
   const contentMaxLength = 500;
 
   const onSubmit = async () => {
@@ -81,16 +78,6 @@ export default function DiaryCreation({
     <>
       <div className="p-[16px] md:pt-0 flex flex-col space-y-4 flex-grow max-w-[540px] w-full">
         <Date year={year} monthAndDay={monthAndDay} />
-        {/* <Textarea
-          placeholder="タイトルを書いてください..."
-          className="resize-none"
-          maxLength={titleMaxLength}
-          onChange={(event) => setTitle(event.target.value)}
-          value={title}
-        />
-        <p>
-          {title.length} / {titleMaxLength} 文字
-        </p> */}
         <Textarea
           placeholder="今日の出来事を書いてください..."
           className="flex-grow resize-none"
