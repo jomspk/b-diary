@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { DateString } from "@/gql/__generated__/graphql";
 
 type CustomCalendarProps = {
-  date: Date | undefined;
+  today: Date;
+  date: Date;
   setDate: (date: Date) => void;
   monthEntries: {
     id: string;
@@ -18,14 +19,11 @@ type CustomCalendarProps = {
 const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
 
 export default function CustomCalendar({
+  today,
   date,
   setDate,
   monthEntries,
 }: CustomCalendarProps) {
-  if (!date) {
-    return null;
-  }
-
   const highlightedDates = monthEntries.map(
     (entry) => new Date(entry.diaryDate)
   );
@@ -53,7 +51,7 @@ export default function CustomCalendar({
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month, day);
-      const isToday = currentDate.toDateString() === new Date().toDateString();
+      const isToday = currentDate.toDateString() === today.toDateString();
       const isSelected =
         date && currentDate.toDateString() === date.toDateString();
       const isHighlighted = highlightedDates.some(
