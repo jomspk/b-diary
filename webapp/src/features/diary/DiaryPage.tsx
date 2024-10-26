@@ -38,22 +38,27 @@ const HistoryQuery = gql(/* GraphQL */ `
   }
 `);
 
-export default function DiaryPage({ user }: { user: Claims | undefined }) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+type DiaryPageProps = {
+  user: Claims | undefined;
+  today: Date;
+};
+
+export default function DiaryPage({ user, today }: DiaryPageProps) {
+  const [date, setDate] = useState<Date>(today);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const formattedDate = date
-    ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString()
-    : "";
+  const formattedDate = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
   const currentYearMonth = useMemo(() => {
-    return date
-      ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1)).toISOString()
-      : "";
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), 1)
+    ).toISOString();
   }, [date]);
 
   const firebaseUid = user?.sub ? user.sub : "";
-  const year = date?.toLocaleDateString("ja-JP", { year: "numeric" });
-  const monthAndDay = date?.toLocaleDateString("ja-JP", {
+  const year = date.toLocaleDateString("ja-JP", { year: "numeric" });
+  const monthAndDay = date.toLocaleDateString("ja-JP", {
     month: "long",
     day: "numeric",
   });
@@ -73,7 +78,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
 
   const diary = useMemo(() => {
     return data.diaries.find((diary) => {
-      return new Date(diary.diaryDate).toDateString() === date?.toDateString();
+      return new Date(diary.diaryDate).toDateString() === date.toDateString();
     });
   }, [data, date]);
 
@@ -108,6 +113,7 @@ export default function DiaryPage({ user }: { user: Claims | undefined }) {
             </button>
           </div>
           <CustomCalendar
+            today={today}
             date={date}
             setDate={setDate}
             monthEntries={data.diaries}
