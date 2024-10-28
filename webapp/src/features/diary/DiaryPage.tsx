@@ -93,7 +93,7 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
       <div
         className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative md:h-screen overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "scale-x-100" : "scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out md:overflow-scroll`}
       >
-        <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[32px] sm pt-[56px] sm:p-[24px] space-y-[24px] flex flex-col">
+        <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[32px] pt-[56px] sm:p-[24px] space-y-[24px] flex flex-col">
           <div className="flex flex-row justify-between">
             <Image
               className="md:hidden"
