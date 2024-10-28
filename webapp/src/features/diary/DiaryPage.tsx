@@ -46,6 +46,7 @@ type DiaryPageProps = {
 export default function DiaryPage({ user, today }: DiaryPageProps) {
   const [date, setDate] = useState<Date>(today);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [onHistoryOpen, setOnHistoryOpen] = useState(false);
 
   const formattedDate = new Date(
     date.getTime() - date.getTimezoneOffset() * 60000
@@ -90,9 +91,9 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
   return (
     <div className="min-h-full flex">
       <div
-        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative h-screen overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out overflow-scroll	`}
+        className={`bg-[url('/kohaku_background.jpg')] bg-cover bg-center flex-initial max-w-[464px] absolute md:relative md:h-screen overflow-x-hidden w-full sm:w-auto origin-left ${menuOpen ? "scale-x-100" : "scale-x-0"} z-50 md:scale-x-100 md:opacity-100 md:w-full transition-all duration-300 ease-in-out md:overflow-scroll`}
       >
-        <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[16px] pt-[56px] sm:p-[24px] space-y-[24px]">
+        <div className="bg-white/75 w-full min-h-screen px-[16px] pb-[32px] sm pt-[56px] sm:p-[24px] space-y-[24px] flex flex-col">
           <div className="flex flex-row justify-between">
             <Image
               className="md:hidden"
@@ -116,9 +117,14 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
             today={today}
             date={date}
             setDate={setDate}
-            monthEntries={data.diaries}
+            onOpen={!onHistoryOpen}
+            setOnOpen={(value) => setOnHistoryOpen(!value)}
           />
-          <DiaryHistory diarys={historyData.diaryHistory} />
+          <DiaryHistory
+            diarys={historyData.diaryHistory}
+            onOpen={onHistoryOpen}
+            setOnOpen={setOnHistoryOpen}
+          />
         </div>
       </div>
       <div className="col-span-3 md:col-span-2 flex-1 flex flex-col pt-[84px] items-center">
