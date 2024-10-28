@@ -1,26 +1,11 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { gql } from "@/gql/__generated__";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useQuery, useSuspenseQuery } from "@apollo/client";
-import { GetDiariesQuery, TimeString } from "@/gql/__generated__/graphql";
-import { getSession } from "@auth0/nextjs-auth0";
-
-const Query = gql(/* GraphQL */ `
-  query GetDiaries($input: DiariesInput!) {
-    diaries(input: $input) {
-      id
-      title
-      content
-      tokenId
-      diaryDate
-      encryptionKey
-      saveToBcAt
-    }
-  }
-`);
+import { Claims } from "@auth0/nextjs-auth0";
+import CustomCalendarMonth from "./CustomCalendarMonth";
 
 type CustomCalendarProps = {
+  user: Claims | undefined;
   today: Date;
   date: Date;
   setDate: (date: Date) => void;
@@ -30,15 +15,14 @@ type CustomCalendarProps = {
 
 const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
 
-export default async function CustomCalendar({
+export default function CustomCalendar({
+  user,
   today,
   date,
   setDate,
   onOpen,
   setOnOpen,
 }: CustomCalendarProps) {
-  const session = await getSession();
-  const user = session?.user;
   const [isMobile, setIsMobile] = useState(false);
   const [displayedMonths, setDisplayedMonths] = useState<Date[]>([]);
 
@@ -55,6 +39,7 @@ export default async function CustomCalendar({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const loadMoreRefT = useRef<HTMLDivElement | null>(null);
   const loadMoreRefB = useRef<HTMLDivElement | null>(null);
+  const firebaseUid = user?.sub ? user.sub : "";
 
   useEffect(() => {
     const checkScreenSize = () => setIsMobile(window.innerWidth <= 768);
@@ -67,7 +52,7 @@ export default async function CustomCalendar({
     if (containerRef.current !== null) {
       containerRef.current.scrollTo(0, 395);
     }
-  }, [isMobile, onOpen, containerRef]);
+  }, [isMobile, containerRef, date]);
 
   const addMonthAtTop = useCallback(() => {
     setDisplayedMonths((prevMonths) => [
@@ -100,35 +85,22 @@ export default async function CustomCalendar({
   );
 
   useEffect(() => {
-    console.log(
-      loadMoreRefT.current,
-      loadMoreRefB.current,
-      containerRef.current
-    );
-
     if (isMobile && loadMoreRefT.current && loadMoreRefB.current) {
-      const observerT = new IntersectionObserver(
-        ([entry]) => {
-          console.log(containerRef.current?.scrollTop);
-          if (
-            entry.isIntersecting &&
-            onOpen &&
-            containerRef.current &&
-            containerRef.current.scrollTop < 365
-          ) {
-            addMonthAtTop();
-          }
-        },
-        { rootMargin: "0px", threshold: 1.0 }
-      );
-      const observerB = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting && onOpen) {
-            addMonthAtBottom();
-          }
-        },
-        { rootMargin: "0px", threshold: 1.0 }
-      );
+      const observerT = new IntersectionObserver(([entry]) => {
+        if (
+          entry.isIntersecting &&
+          onOpen &&
+          containerRef.current &&
+          containerRef.current.scrollTop < 365
+        ) {
+          addMonthAtTop();
+        }
+      });
+      const observerB = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && onOpen) {
+          addMonthAtBottom();
+        }
+      });
 
       observerT.observe(loadMoreRefT.current);
       observerB.observe(loadMoreRefB.current);
@@ -144,82 +116,15 @@ export default async function CustomCalendar({
     return null;
   }
 
-  const changeYear = (increment: number) => {
-    setDate(new Date(date.getFullYear() + increment, date.getMonth(), 1));
-  };
-
-  const getDaysInMonth = (year: number, month: number) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (year: number, month: number) => {
-    return new Date(year, month, 1).getDay();
-  };
-
-  const renderCalendar = (displayDate: Date) => {
-    const year = displayDate.getFullYear();
-    const month = displayDate.getMonth();
-    const daysInMonth = getDaysInMonth(year, month);
-    const firstDay = getFirstDayOfMonth(year, month);
-    const days = [];
-
-    // const firebaseUid = user?.sub ? user.sub : "";
-    // console.log(displayDate);
-    // const { data } = useSuspenseQuery(Query, {
-    //   variables: {
-    //     input: {
-    //       date: new Date(
-    //         Date.UTC(displayDate.getFullYear(), displayDate.getMonth(), 1)
-    //       ).toISOString() as TimeString,
-    //       firebaseUid: firebaseUid,
-    //     },
-    //   },
-    // });
-
-    const data: GetDiariesQuery = { diaries: [] };
-    const highlightedDates = data.diaries.map(
-      (entry) => new Date(entry.diaryDate)
+  const changeYear = (currentDate: Date, increment: number) => {
+    setDate(
+      new Date(currentDate.getFullYear() + increment, currentDate.getMonth(), 1)
     );
-
-    for (let i = 0; i < firstDay; i++) {
-      days.push(
-        <div
-          key={`empty-${i}-${month}`}
-          className="h-[32px] w-[32px] m-auto"
-        ></div>
-      );
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const currentDate = new Date(year, month, day);
-      const isToday = currentDate.toDateString() === today.toDateString();
-      const isSelected =
-        date && currentDate.toDateString() === date.toDateString();
-      const isHighlighted = highlightedDates.some(
-        (d) => d.toDateString() === currentDate.toDateString()
-      );
-
-      days.push(
-        <div
-          key={`${day}-${month}`}
-          className={`flex items-center justify-center rounded-full cursor-pointer h-[32px] w-[32px] m-auto
-            ${isToday ? "bg-primary text-white" : ""}
-            ${isSelected ? "border-2 border-primary" : ""}
-            ${isHighlighted && !isToday ? "bg-primary/20" : ""}
-          `}
-          onClick={() => setDate(currentDate)}
-        >
-          {day}
-        </div>
-      );
-    }
-
-    return days;
   };
 
   return isMobile ? (
     <div
-      className={`${onOpen ? "pt-[48px] flex-1" : "py-[8px]"} w-full max-w-md mx-auto bg-white rounded-lg shadow overflow-y-scroll transition-all duration-300 ease-in-out`}
+      className={`${onOpen ? "pt-[48px] flex-1" : "py-[8px]"} w-full max-w-md mx-auto bg-white rounded-lg shadow transition-all duration-300 ease-in-out`}
     >
       {!onOpen ? (
         <div
@@ -235,7 +140,11 @@ export default async function CustomCalendar({
         className={`${onOpen ? "h-[calc(100vh-330px)]" : "h-0"} px-[13px] overflow-hidden transition-all duration-300 ease-in-out flex flex-col`}
       >
         <div className="flex m-auto justify-between w-[160px] pb-[24px]">
-          <Button variant="ghost" size="icon" onClick={() => changeYear(-1)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => changeYear(displayedMonths[1], -1)}
+          >
             <Image
               src="/arrow.svg"
               alt="琥珀"
@@ -245,9 +154,13 @@ export default async function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {date.toLocaleString("ja-JP", { year: "numeric" })}
+            {displayedMonths[1].toLocaleString("ja-JP", { year: "numeric" })}
           </span>
-          <Button variant="ghost" size="icon" onClick={() => changeYear(1)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => changeYear(displayedMonths[1], 1)}
+          >
             <Image
               src="/arrow.svg"
               alt="琥珀"
@@ -258,7 +171,7 @@ export default async function CustomCalendar({
           </Button>
         </div>
         <div
-          className="flex-grow overflow-y-scroll overflow-x-hidden"
+          className="flex-grow overflow-y-scroll overflow-x-hidden hidden-scrollbar"
           ref={containerRef}
         >
           <div ref={loadMoreRefT} className="w-full"></div>
@@ -281,7 +194,13 @@ export default async function CustomCalendar({
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-y-[24px] gap-x-[18px]">
-                {renderCalendar(displayDate)}
+                <CustomCalendarMonth
+                  displayDate={displayDate}
+                  today={today}
+                  date={date}
+                  setDate={setDate}
+                  firebaseUid={firebaseUid}
+                />
               </div>
             </div>
           ))}
@@ -293,7 +212,11 @@ export default async function CustomCalendar({
     <div className="h-[420px] w-full max-w-md mx-auto py-[48px] px-[17px] bg-white rounded-lg shadow">
       <div className="flex justify-between flex-col items-center mb-[24px] space-y-[10px]">
         <div className="flex justify-between items-center w-full max-w-[160px]">
-          <Button variant="ghost" size="icon" onClick={() => changeYear(-1)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => changeYear(date, -1)}
+          >
             <Image
               src="/arrow.svg"
               alt="琥珀"
@@ -305,7 +228,11 @@ export default async function CustomCalendar({
           <span className="font-bold text-xl">
             {date.toLocaleString("ja-JP", { year: "numeric" })}
           </span>
-          <Button variant="ghost" size="icon" onClick={() => changeYear(1)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => changeYear(date, 1)}
+          >
             <Image
               src="/arrow.svg"
               alt="琥珀"
@@ -350,7 +277,13 @@ export default async function CustomCalendar({
         ))}
       </div>
       <div className="grid grid-cols-7 gap-y-[8px] gap-x-[24px]">
-        {renderCalendar(date)}
+        <CustomCalendarMonth
+          displayDate={date}
+          today={today}
+          date={date}
+          setDate={setDate}
+          firebaseUid={firebaseUid}
+        />
       </div>
     </div>
   );

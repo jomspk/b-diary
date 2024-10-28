@@ -114,6 +114,7 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
             </button>
           </div>
           <CustomCalendar
+            user={user}
             today={today}
             date={date}
             setDate={setDate}
