@@ -40,11 +40,10 @@ const HistoryQuery = gql(/* GraphQL */ `
 
 type DiaryPageProps = {
   user: Claims | undefined;
-  today: Date;
 };
 
-export default function DiaryPage({ user, today }: DiaryPageProps) {
-  const [date, setDate] = useState<Date>(today);
+export default function DiaryPage({ user }: DiaryPageProps) {
+  const [date, setDate] = useState<Date>(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
 
   const formattedDate = new Date(
@@ -113,7 +112,6 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
             </button>
           </div>
           <CustomCalendar
-            today={today}
             date={date}
             setDate={setDate}
             monthEntries={data.diaries}
