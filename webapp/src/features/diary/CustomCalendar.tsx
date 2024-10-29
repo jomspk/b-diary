@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DateString } from "@/gql/__generated__/graphql";
+import { useEffect, useState } from "react";
 
 type CustomCalendarProps = {
-  today: Date;
   date: Date;
   setDate: (date: Date) => void;
   monthEntries: {
@@ -19,11 +19,14 @@ type CustomCalendarProps = {
 const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
 
 export default function CustomCalendar({
-  today,
   date,
   setDate,
   monthEntries,
 }: CustomCalendarProps) {
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => {
+    setToday(new Date());
+  }, []);
   const highlightedDates = monthEntries.map(
     (entry) => new Date(entry.diaryDate)
   );
@@ -51,7 +54,7 @@ export default function CustomCalendar({
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month, day);
-      const isToday = currentDate.toDateString() === today.toDateString();
+      const isToday = currentDate.toDateString() === today?.toDateString();
       const isSelected =
         date && currentDate.toDateString() === date.toDateString();
       const isHighlighted = highlightedDates.some(
