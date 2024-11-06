@@ -1,0 +1,31 @@
+{
+  "login": {
+    "agree": "I accept the Terms of Use",
+    "button": "Sign Up & Log In"
+  },
+  "diary": {
+    "placeholder": "Write about today's events...",
+    "count": "characters",
+    "save": "Save",
+    "save_success": "Diary created successfully",
+    "save_fail": "Failed to create diary entry.",
+    "get_user_fail": "Unable to retrieve user information. Please log in again.",
+    "update": "Update",
+    "update_success": "Diary updated successfully.",
+    "update_fail": "Failed to update diary.",
+    "read": "Verify that the diary is protected.",
+    "opensea_link": "Link to OpenSea",
+    "opensea_memo": "※The diary is encrypted in the description on the linked page.",
+    "composite_key": "Decryption Key",
+    "composite_memo": "※Never share your decryption key with anyone.",
+    "close": "Close",
+    "history": "History",
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
+  }
+}

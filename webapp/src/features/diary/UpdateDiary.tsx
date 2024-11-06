@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useTranslations } from "next-intl";
 
 const Mutation = gql(/* GraphQL */ `
   mutation UpdateDiary($input: UpdateDiaryInput!) {
@@ -35,7 +36,8 @@ export function UpdateDiary({
   monthAndDay,
   diary,
   onReload,
-}: UpdateDiaryProps) {
+}: Readonly<UpdateDiaryProps>) {
+  const t = useTranslations("diary");
   const [content, setContent] = useState<string>("");
   const [updateDiary] = useMutation(Mutation, {
     onCompleted() {
@@ -56,14 +58,8 @@ export function UpdateDiary({
 
   const onSubmit = async () => {
     try {
-      if (!user)
-        throw new Error(
-          "ユーザー情報を取得できません。再度ログインしてください。"
-        );
-      else if (!user.sub)
-        throw new Error(
-          "ユーザー情報を取得できません。再度ログインしてください。"
-        );
+      if (!user) throw new Error(t("get_user_fail"));
+      else if (!user.sub) throw new Error(t("get_user_fail"));
       await updateDiary({
         variables: {
           input: {
@@ -73,10 +69,10 @@ export function UpdateDiary({
           },
         },
       });
-      toast({ title: "日記の更新に成功しました" });
+      toast({ title: t("update_success") });
     } catch (e) {
       console.error(e);
-      toast({ title: "日記の更新に失敗しました", variant: "destructive" });
+      toast({ title: t("update_fail"), variant: "destructive" });
     }
   };
 
@@ -85,14 +81,14 @@ export function UpdateDiary({
       <div className="p-[16px] md:pt-0 flex flex-col space-y-4 flex-grow max-w-[540px] w-full">
         <Date year={year} monthAndDay={monthAndDay} />
         <Textarea
-          placeholder="今日の出来事を書いてください..."
+          placeholder={t("placeholder")}
           className="flex-grow resize-none"
           maxLength={contentMaxLength}
           onChange={(event) => setContent(event.target.value)}
           value={content}
         />
         <p>
-          {content.length} / {contentMaxLength} 文字
+          {content.length} / {contentMaxLength} {t("count")}
         </p>
       </div>
       <div className="bg-gray-200 flex justify-center w-full p-3">
@@ -100,7 +96,7 @@ export function UpdateDiary({
           className="bg-primary w-[160px] hover:bg-primary/50"
           onClick={onSubmit}
         >
-          更新
+          {t("update")}
         </Button>
       </div>
     </>

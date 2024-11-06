@@ -12,6 +12,7 @@ import { TimeString } from "@/gql/__generated__/graphql";
 import { Claims } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { useLocale } from "next-intl";
 
 const Query = gql(/* GraphQL */ `
   query GetDiaries($input: DiariesInput!) {
@@ -43,6 +44,7 @@ type DiaryPageProps = {
 };
 
 export default function DiaryPage({ user }: DiaryPageProps) {
+  const locale = useLocale();
   const [date, setDate] = useState<Date>(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -56,8 +58,8 @@ export default function DiaryPage({ user }: DiaryPageProps) {
   }, [date]);
 
   const firebaseUid = user?.sub ? user.sub : "";
-  const year = date.toLocaleDateString("ja-JP", { year: "numeric" });
-  const monthAndDay = date.toLocaleDateString("ja-JP", {
+  const year = date.toLocaleDateString(locale, { year: "numeric" });
+  const monthAndDay = date.toLocaleDateString(locale, {
     month: "long",
     day: "numeric",
   });

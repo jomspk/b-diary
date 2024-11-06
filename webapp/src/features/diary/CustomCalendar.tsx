@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DateString } from "@/gql/__generated__/graphql";
 import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 type CustomCalendarProps = {
   date: Date;
@@ -16,13 +17,22 @@ type CustomCalendarProps = {
   }[];
 };
 
-const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
-
 export default function CustomCalendar({
   date,
   setDate,
   monthEntries,
-}: CustomCalendarProps) {
+}: Readonly<CustomCalendarProps>) {
+  const locale = useLocale();
+  const t = useTranslations("diary");
+  const WEEKDAYS = [
+    t("monday"),
+    t("tuesday"),
+    t("wednesday"),
+    t("thursday"),
+    t("friday"),
+    t("saturday"),
+    t("sunday"),
+  ];
   const [today, setToday] = useState<Date | null>(null);
   useEffect(() => {
     setToday(new Date());
@@ -62,7 +72,7 @@ export default function CustomCalendar({
       );
 
       days.push(
-        <div
+        <button
           key={day}
           className={`flex items-center justify-center rounded-full cursor-pointer h-[32px] w-[32px] m-auto
             ${isToday ? "bg-primary text-white" : ""}
@@ -72,7 +82,7 @@ export default function CustomCalendar({
           onClick={() => setDate(currentDate)}
         >
           {day}
-        </div>
+        </button>
       );
     }
 
@@ -101,7 +111,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {date.toLocaleString("ja-JP", { year: "numeric" })}
+            {date.toLocaleString(locale, { year: "numeric" })}
           </span>
           <Button variant="ghost" size="icon" onClick={() => changeYear(1)}>
             <Image
@@ -124,7 +134,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {date.toLocaleString("ja-JP", { month: "long" })}
+            {date.toLocaleString(locale, { month: "long" })}
           </span>
           <Button variant="ghost" size="icon" onClick={() => changeMonth(1)}>
             <Image

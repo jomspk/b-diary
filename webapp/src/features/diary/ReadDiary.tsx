@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type ReadDiaryProps = {
   diary: {
@@ -24,11 +25,12 @@ export default function ReadDiary({
   diary,
   year,
   monthAndDay,
-}: ReadDiaryProps) {
+}: Readonly<ReadDiaryProps>) {
+  const t = useTranslations("diary");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showPassowrd, setShowPassword] = useState(false);
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
-  const [showPassowrd, setShowPassword] = useState(false);
 
   const handleOpenSeaLink = () => {
     window.open(
@@ -70,7 +72,7 @@ export default function ReadDiary({
           onClick={openDrawer}
           className="bg-orange-500 hover:bg-primary/50"
         >
-          日記が守られていることを確認
+          {t("read")}
         </Button>
       </div>
 
@@ -91,12 +93,12 @@ export default function ReadDiary({
                   onClick={handleOpenSeaLink}
                   className="bg-blue-500 hover:bg-blue-400 text-white"
                 >
-                  OpenSeaへのリンク
+                  {t("opensea_link")}
                 </Button>
-                <p>※リンク先の説明の欄に暗号化された日記があります</p>
+                <p>{t("opensea_memo")}</p>
               </div>
               <div>
-                <div className="text-lg font-bold">複合化キー</div>
+                <div className="text-lg font-bold">{t("composite_key")}</div>
                 <div>
                   <span className="font-mono">
                     {showPassowrd
@@ -111,9 +113,7 @@ export default function ReadDiary({
                   >
                     {showPassowrd ? <EyeOff /> : <Eye />}
                   </Button>
-                  <p className="text-red-600">
-                    ※複合化キーは決して誰にも見せないでください
-                  </p>
+                  <p className="text-red-600">{t("composite_memo")}</p>
                 </div>
               </div>
               <div className="flex flex-row-reverse">
@@ -121,7 +121,7 @@ export default function ReadDiary({
                   className="bg-primary hover:bg-primary/50"
                   onClick={closeDrawer}
                 >
-                  閉じる
+                  {t("close")}
                 </Button>
               </div>
             </div>
