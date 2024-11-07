@@ -44,7 +44,7 @@ type DiaryPageProps = {
 };
 
 export default function DiaryPage({ user, today }: DiaryPageProps) {
-  const [date, setDate] = useState<Date>(today);
+  const [date, setDate] = useState<Date>(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
   const [onHistoryOpen, setOnHistoryOpen] = useState(false);
 
