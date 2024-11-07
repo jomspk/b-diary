@@ -65,21 +65,22 @@ const CustomCalendarMonth: React.FC<CustomCalendarMonthProps> = ({
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month, day);
-      const isToday = currentDate.toDateString() === today.toDateString();
+      const isToday =
+        today && currentDate.toDateString() === today.toDateString();
       const isSelected =
         date && currentDate.toDateString() === date.toDateString();
       const isHighlighted = highlightedDates.some(
-        (d) => d.toDateString() === currentDate.toDateString()
+        (d) => d && d.toDateString() === currentDate.toDateString()
       );
 
       days.push(
         <div
           key={`${day}-${month}`}
           className={`flex items-center justify-center rounded-full cursor-pointer h-[32px] w-[32px] m-auto
-            ${isToday ? "bg-primary text-white" : ""}
-            ${isSelected ? "border-2 border-primary" : ""}
-            ${isHighlighted && !isToday ? "bg-primary/20" : ""}
-          `}
+              ${isToday ? "bg-primary text-white" : ""}
+              ${isSelected ? "border-2 border-primary" : ""}
+              ${isHighlighted && !isToday ? "bg-primary/20" : ""}
+            `}
           onClick={() => setDate(currentDate)}
         >
           {day}
