@@ -62,7 +62,7 @@ export default function CustomCalendar({
     if (containerRef.current !== null) {
       containerRef.current.scrollTo(0, 365);
     }
-  }, [date]);
+  }, []);
 
   const addMonthAtBottom = useCallback(() => {
     setDisplayedMonths((prevMonths) => [
@@ -73,7 +73,7 @@ export default function CustomCalendar({
         1
       ),
     ]);
-  }, [date]);
+  }, []);
 
   const changeMonth = useCallback(
     (increment: number) => {
