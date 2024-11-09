@@ -20,14 +20,12 @@ processes:
     command: |
       if [ ! -d "$MYSQL_DATA_DIR" ]; then
         mkdir -p $MYSQL_DATA_DIR
-        chown -R mysql:mysql $MYSQL_DATA_DIR
-        chown -R mysql:mysql $MYSQL_HOME
       fi
       if [ -z "$(ls -A $MYSQL_DATA_DIR)" ]; then
-        mysqld --user=mysql --datadir=$MYSQL_DATA_DIR --initialize-insecure
+        mysqld --datadir=$MYSQL_DATA_DIR --initialize-insecure
       fi
 
-      mysqld --user=mysql --socket=$MYSQL_UNIX_PORT --datadir=$MYSQL_DATA_DIR --port=$MYSQL_PORT --log-error=$MYSQL_HOME/mysql.log & MYSQL_PID=$! && echo 'Starting mysqld... check mysql_logs for details'
+      mysqld --socket=$MYSQL_UNIX_PORT --datadir=$MYSQL_DATA_DIR --port=$MYSQL_PORT --log-error=$MYSQL_HOME/mysql.log & MYSQL_PID=$! && echo 'Starting mysqld... check mysql_logs for details'
     is_daemon: true
     shutdown:
       command: "mysqladmin -u root shutdown"
