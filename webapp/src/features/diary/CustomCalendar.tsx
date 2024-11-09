@@ -6,7 +6,6 @@ import CustomCalendarMonth from "./CustomCalendarMonth";
 
 type CustomCalendarProps = {
   user: Claims | undefined;
-  today: Date;
   date: Date;
   setDate: (date: Date) => void;
   onOpen: boolean;
@@ -17,7 +16,6 @@ const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
 
 export default function CustomCalendar({
   user,
-  today,
   date,
   setDate,
   onOpen,
@@ -25,6 +23,7 @@ export default function CustomCalendar({
 }: CustomCalendarProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [displayedMonths, setDisplayedMonths] = useState<Date[]>([]);
+  const [today, setToday] = useState(new Date());
 
   useEffect(() => {
     if (date) {
@@ -42,6 +41,7 @@ export default function CustomCalendar({
   const firebaseUid = user?.sub ? user.sub : "";
 
   useEffect(() => {
+    setToday(new Date());
     const checkScreenSize = () => setIsMobile(window.innerWidth <= 768);
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);

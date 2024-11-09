@@ -40,10 +40,9 @@ const HistoryQuery = gql(/* GraphQL */ `
 
 type DiaryPageProps = {
   user: Claims | undefined;
-  today: Date;
 };
 
-export default function DiaryPage({ user, today }: DiaryPageProps) {
+export default function DiaryPage({ user }: DiaryPageProps) {
   const [date, setDate] = useState<Date>(new Date());
   const [menuOpen, setMenuOpen] = useState(false);
   const [onHistoryOpen, setOnHistoryOpen] = useState(false);
@@ -115,7 +114,6 @@ export default function DiaryPage({ user, today }: DiaryPageProps) {
           </div>
           <CustomCalendar
             user={user}
-            today={today}
             date={date}
             setDate={setDate}
             onOpen={!onHistoryOpen}
