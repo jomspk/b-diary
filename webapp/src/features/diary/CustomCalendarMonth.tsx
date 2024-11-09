@@ -19,7 +19,7 @@ const Query = gql(/* GraphQL */ `
 
 type CustomCalendarMonthProps = {
   displayDate: Date;
-  today: Date;
+  today: Date | null;
   date: Date;
   setDate: (date: Date) => void;
   firebaseUid: string;

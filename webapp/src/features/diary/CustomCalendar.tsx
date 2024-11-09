@@ -21,9 +21,9 @@ export default function CustomCalendar({
   onOpen,
   setOnOpen,
 }: CustomCalendarProps) {
+  const [today, setToday] = useState<Date | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [displayedMonths, setDisplayedMonths] = useState<Date[]>([]);
-  const [today, setToday] = useState(new Date());
 
   useEffect(() => {
     if (date) {
