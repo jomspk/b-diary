@@ -141,7 +141,7 @@ export default function CustomCalendar({
           className="font-bold text-xl px-[24px]"
           onClick={() => setOnOpen(!onOpen)}
         >
-          カレンダー
+          {t("calendar")}
         </div>
       ) : (
         <></>
@@ -164,7 +164,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {displayedMonths[1].toLocaleString("ja-JP", { year: "numeric" })}
+            {displayedMonths[1].toLocaleString(locale, { year: "numeric" })}
           </span>
           <Button
             variant="ghost"
@@ -191,7 +191,7 @@ export default function CustomCalendar({
               key={index}
             >
               <span className="font-bold text-xl">
-                {displayDate.toLocaleString("ja-JP", { month: "long" })}
+                {displayDate.toLocaleString(locale, { month: "long" })}
               </span>
               <div className="grid grid-cols-7 gap-x-[18px] mb-[24px] mt-[24px]">
                 {WEEKDAYS.map((day) => (

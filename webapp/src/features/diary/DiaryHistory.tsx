@@ -28,8 +28,8 @@ export default function DiaryHistory({
   };
 
   return (
-    <button
-      className={`${onOpen ? "py-[48px] flex-1" : "py-[8px]"} md:py-[48px] px-[24px] bg-white rounded-md`}
+    <div
+      className={`${onOpen ? "py-[48px] flex-1" : "py-[8px]"} md:flex-none md:py-[48px] px-[24px] bg-white rounded-md`}
       onClick={() => setOnOpen(!onOpen)}
     >
       <div className="font-bold text-xl">{t("history")}</div>
@@ -53,6 +53,6 @@ export default function DiaryHistory({
         ))}
         <div className="bg-gray-300 h-px my-[8px]"></div>
       </div>
-    </button>
+    </div>
   );
 }
