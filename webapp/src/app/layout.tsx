@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -15,13 +17,17 @@ const noto = Noto_Sans_JP({
   variable: "--font-noto",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <UserProvider>
         <body
           className={cn(
@@ -30,10 +36,12 @@ export default function RootLayout({
             fontSans.variable
           )}
         >
-          <ApolloProvider>
-            <main className="h-full">{children}</main>
-            <Toaster />
-          </ApolloProvider>
+          <NextIntlClientProvider messages={messages}>
+            <ApolloProvider>
+              <main className="h-full">{children}</main>
+              <Toaster />
+            </ApolloProvider>
+          </NextIntlClientProvider>
         </body>
       </UserProvider>
     </html>

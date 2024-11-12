@@ -1,0 +1,29 @@
+{
+  "login": { "agree": "利用規約に同意する", "button": "新規登録・ログイン" },
+  "diary": {
+    "placeholder": "今日の出来事を書いてください...",
+    "count": "文字",
+    "save": "保存",
+    "save_success": "日記の作成に成功しました",
+    "save_fail": "日記の作成に失敗しました",
+    "get_user_fail": "ユーザー情報を取得できません。再度ログインしてください。",
+    "update": "更新",
+    "update_success": "日記の更新に成功しました",
+    "update_fail": "日記の更新に失敗しました",
+    "read": "日記が守られていることを確認",
+    "opensea_link": "OpenSeaへのリンク",
+    "opensea_memo": "※リンク先の説明の欄に暗号化された日記があります",
+    "composite_key": "複合化キー",
+    "composite_memo": "※複合化キーは決して誰にも見せないでください",
+    "close": "閉じる",
+    "history": "履歴",
+    "calendar": "カレンダー",
+    "monday": "月",
+    "tuesday": "火",
+    "wednesday": "水",
+    "thursday": "木",
+    "friday": "金",
+    "saturday": "土",
+    "sunday": "日"
+  }
+}

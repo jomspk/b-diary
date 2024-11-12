@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Claims } from "@auth0/nextjs-auth0";
 import CustomCalendarMonth from "./CustomCalendarMonth";
@@ -12,15 +13,24 @@ type CustomCalendarProps = {
   setOnOpen: (value: boolean) => void;
 };
 
-const WEEKDAYS = ["月", "火", "水", "木", "金", "土", "日"];
-
 export default function CustomCalendar({
   user,
   date,
   setDate,
   onOpen,
   setOnOpen,
-}: CustomCalendarProps) {
+}: Readonly<CustomCalendarProps>) {
+  const locale = useLocale();
+  const t = useTranslations("diary");
+  const WEEKDAYS = [
+    t("monday"),
+    t("tuesday"),
+    t("wednesday"),
+    t("thursday"),
+    t("friday"),
+    t("saturday"),
+    t("sunday"),
+  ];
   const [today, setToday] = useState<Date | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [displayedMonths, setDisplayedMonths] = useState<Date[]>([]);
@@ -131,7 +141,7 @@ export default function CustomCalendar({
           className="font-bold text-xl px-[24px]"
           onClick={() => setOnOpen(!onOpen)}
         >
-          カレンダー
+          {t("calendar")}
         </div>
       ) : (
         <></>
@@ -154,7 +164,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {displayedMonths[1].toLocaleString("ja-JP", { year: "numeric" })}
+            {displayedMonths[1].toLocaleString(locale, { year: "numeric" })}
           </span>
           <Button
             variant="ghost"
@@ -181,7 +191,7 @@ export default function CustomCalendar({
               key={index}
             >
               <span className="font-bold text-xl">
-                {displayDate.toLocaleString("ja-JP", { month: "long" })}
+                {displayDate.toLocaleString(locale, { month: "long" })}
               </span>
               <div className="grid grid-cols-7 gap-x-[18px] mb-[24px] mt-[24px]">
                 {WEEKDAYS.map((day) => (
@@ -226,7 +236,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {date.toLocaleString("ja-JP", { year: "numeric" })}
+            {date.toLocaleString(locale, { year: "numeric" })}
           </span>
           <Button
             variant="ghost"
@@ -253,7 +263,7 @@ export default function CustomCalendar({
             />
           </Button>
           <span className="font-bold text-xl">
-            {date.toLocaleString("ja-JP", { month: "long" })}
+            {date.toLocaleString(locale, { month: "long" })}
           </span>
           <Button variant="ghost" size="icon" onClick={() => changeMonth(1)}>
             <Image

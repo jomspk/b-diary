@@ -1,10 +1,12 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default function Terms() {
+  const locale = useLocale();
   const [markdown, setMarkdown] = useState("");
 
   const components = {
@@ -20,7 +22,7 @@ export default function Terms() {
   };
 
   useEffect(() => {
-    fetch(`/terms.md`)
+    fetch(`/terms/terms_${locale}.md`)
       .then((m) => {
         return m.text();
       })

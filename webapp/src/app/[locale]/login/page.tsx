@@ -12,8 +12,10 @@ import Terms from "@/features/login/Terms";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function Component() {
+  const t = useTranslations("login");
   const [onChecked, setOnChecked] = useState<CheckedState>(false);
   return (
     <div className="bg-[url('/kohaku_background.jpg')] bg-cover bg-center min-h-full w-full flex ">
@@ -33,13 +35,13 @@ export default function Component() {
                 onCheckedChange={setOnChecked}
               />
               <CheckboxLabel htmlFor="terms" className="text-base">
-                利用規約に同意する
+                {t("agree")}
               </CheckboxLabel>
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <Button className="w-full sm:w-auto" disabled={!onChecked}>
-              <a href="/api/auth/login">新規登録・ログイン</a>
+              <a href="/api/auth/login">{t("button")}</a>
             </Button>
           </CardFooter>
         </Card>

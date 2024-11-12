@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@apollo/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { DateString } from "@/gql/__generated__/graphql";
+import { useTranslations } from "next-intl";
 
 const Mutation = gql(/* GraphQL */ `
   mutation CreateDiary($input: CreateUserDiaryInput!) {
@@ -28,7 +29,8 @@ export default function DiaryCreation({
   monthAndDay,
   formattedDate,
   onReload,
-}: DiaryCreationProps) {
+}: Readonly<DiaryCreationProps>) {
+  const t = useTranslations("diary");
   const [content, setContent] = useState<string>("");
   const [createDiary] = useMutation(Mutation, {
     onCompleted() {
@@ -49,14 +51,8 @@ export default function DiaryCreation({
 
   const onSubmit = async () => {
     try {
-      if (!user)
-        throw new Error(
-          "ユーザー情報を取得できません。再度ログインしてください。"
-        );
-      else if (!user.sub)
-        throw new Error(
-          "ユーザー情報を取得できません。再度ログインしてください。"
-        );
+      if (!user) throw new Error(t("get_user_fail"));
+      else if (!user.sub) throw new Error(t("get_user_fail"));
       await createDiary({
         variables: {
           input: {
@@ -67,10 +63,10 @@ export default function DiaryCreation({
           },
         },
       });
-      toast({ title: "日記の作成に成功しました" });
+      toast({ title: t("save_success") });
     } catch (e) {
       console.error(e);
-      toast({ title: "日記の作成に失敗しました", variant: "destructive" });
+      toast({ title: t("save_fail"), variant: "destructive" });
     }
   };
 
@@ -79,14 +75,14 @@ export default function DiaryCreation({
       <div className="p-[16px] md:pt-0 flex flex-col space-y-4 flex-grow max-w-[540px] w-full">
         <Date year={year} monthAndDay={monthAndDay} />
         <Textarea
-          placeholder="今日の出来事を書いてください..."
+          placeholder={t("placeholder")}
           className="flex-grow resize-none"
           maxLength={contentMaxLength}
           onChange={(event) => setContent(event.target.value)}
           value={content}
         />
         <p>
-          {content.length} / {contentMaxLength} 文字
+          {content.length} / {contentMaxLength} {t("count")}
         </p>
       </div>
       <div className="bg-gray-200 flex justify-center w-full p-3">
@@ -94,7 +90,7 @@ export default function DiaryCreation({
           className="bg-primary w-[160px] hover:bg-primary/50"
           onClick={onSubmit}
         >
-          保存
+          {t("save")}
         </Button>
       </div>
     </>
